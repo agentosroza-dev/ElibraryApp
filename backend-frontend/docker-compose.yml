@@ -1,0 +1,150 @@
+#services:
+##name of service
+#  app:
+#    build: .
+#    image: my-app:latest
+#    container_name: my-app-container
+#    volumes:
+#      #bind all files to html
+#      - ./:/var/www/html
+#      - node:/var/www/html/node_modules
+#      - laravel:/var/www/html/vendor
+#
+#    #run command start.sh
+#    command: sh /var/www/html/start.sh
+#
+#    ports:
+#      - 8080:80
+#    depends_on:
+#      - mysql
+#    environment:
+#      #database configuration
+#      DB_CONNECTION: mysql
+#      DB_HOST: mysql
+#      #add new
+#      DB_PORT: 3306
+#      #add new
+#      DB_USERNAME: root
+#
+#      DB_PASSWORD: root
+#      DB_DATABASE: project1_laravel
+#
+#      APP_URL: http://localhost:8080
+#      #APP_FRONTEND_URL: "http://localhost:5173"
+#      #APP_EMAIL_VERIFICATION_URL: "${APP_FRONTEND_URL}/email/verify"
+#      #APP_PASSWORD_RESET_URL: "${APP_FRONTEND_URL}/password/reset"
+#
+#      #link frontend
+#      APP_FRONTEND_URL: http://localhost:5173
+#      APP_EMAIL_VERIFICATION_URL: "http://localhost:5173/email/verify"
+#      APP_PASSWORD_RESET_URL: "http://localhost:5173/password/reset"
+#
+#
+#
+#  mysql:
+#    image: mariadb:10.11.13
+#    container_name: mysql-my-app-container
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      TZ: UTC
+#    command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+#    volumes:
+#      - mysql:/var/lib/mysql
+#    ports:
+#      - 3306:3306
+#
+#  #local have phpmyadmin but in hosting no phpmyadmin
+#  phpmyadmin:
+#    image: phpmyadmin:5.2.2
+#    container_name: phpmyadmin-my-app-container
+#    depends_on:
+#      - mysql
+#    environment:
+#      UPLOAD_LIMIT: 50M
+#      PMA_HOST: mysql
+#      PMA_PORT: 3306
+#      PMA_USER: root
+#      PMA_PASSWORD: root
+#    ports:
+#      - 8081:80
+##bind all
+#volumes:
+#  mysql:
+#    name: my-app-mysql
+#  node:
+#    name: my-app-node
+#  laravel:
+#    name: my-app-laravel
+
+
+services:
+  app:
+    build: .
+    image: my-app:latest
+    container_name: my-app-container
+    volumes:
+      - ./:/var/www/html
+      - node:/var/www/html/node_modules
+      - laravel:/var/www/html/vendor
+    command: sh /var/www/html/start.sh
+    ports:
+      - 8080:80
+      - 9080:8080
+    depends_on:
+      - mysql
+    environment:
+      APP_URL: http://localhost:8080
+      APP_FRONTEND_URL: http://localhost:5173
+      APP_EMAIL_VERIFICATION_URL: "http://localhost:5173/email/verify"
+      APP_PASSWORD_RESET_URL: "http://localhost:5173/password/reset"
+
+      #puhser code
+
+
+      # Reverb Configuration
+      REVERB_APP_ID: ${REVERB_APP_ID}
+      REVERB_APP_KEY: ${REVERB_APP_KEY}
+      REVERB_APP_SECRET: ${REVERB_APP_SECRET}
+      REVERB_HOST: "0.0.0.0"
+      REVERB_PORT: 8080
+      REVERB_SCHEME: "http"
+      REVERB_PATH: ""
+
+      # Database Configuration
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: project1_laravel
+      DB_USERNAME: root
+      DB_PASSWORD: root
+  mysql:
+    image: mariadb:10.11.13
+    container_name: mysql-my-app-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: UTC
+    command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+  phpmyadmin:
+    image: phpmyadmin:5.2.2
+    container_name: phpmyadmin-my-app-container
+    depends_on:
+      - mysql
+    environment:
+      UPLOAD_LIMIT: 50M
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - 8081:80
+volumes:
+  mysql:
+    name: my-app-mysql
+  node:
+    name: my-app-node
+  laravel:
+    name: my-app-laravel

@@ -1,0 +1,319 @@
+{
+    "navbar-fullscreen": "Full Screen",
+    "navbar-signout": "Sign Out",
+    "navbar-dark": "Dark",
+    "navbar-light": "Light",
+
+    "main-footer": "Read Anything you want",
+    "main-footer-copy": "Copyright © 2026.",
+    "main-footer-sub": "All rights reserved.",
+
+    "logo-brand-text": "PAC E-Library",
+
+    "permissions": {
+        "items": {
+            "author": "Post by Author"
+        },
+        "users": {
+            "permissions": "Permissions"
+        }
+    },
+
+    "dashboard": {
+        "label": "Dashboard",
+        "text": "Dashboard E-Library",
+        "subtitle": "Discover books, continue reading, and explore your saved books",
+        "page_loading": "Loading dashboard...",
+        "page_loading_sub": "Please wait while we load your books.",
+        "sections": {
+            "recommended": {
+                "title": "Recommended Books",
+                "subtitle": "Picked for you",
+                "badge": "Recommended"
+            },
+            "popular": {
+                "title": "Popular Books",
+                "subtitle": "Most loved by readers",
+                "badge": "Popular"
+            },
+            "interest": {
+                "title": "You may be interested",
+                "subtitle": "Based on your interests",
+                "badge": "Interest"
+            },
+            "new_release": {
+                "title": "New Releases",
+                "subtitle": "Latest books",
+                "badge": "NEW"
+            },
+            "continue_reading": {
+                "title": "Continue Reading",
+                "subtitle": "Pick up where you left off"
+            },
+            "favorites": {
+                "title": "My Favorites",
+                "subtitle": "Books you saved",
+                "read": "Read"
+            }
+        }
+    },
+
+    "library-page": {
+        "title": "Library",
+        "subtitle": "Browse your collection of books",
+        "search_placeholder": "Search by title, tag...",
+        "all_categories": "All Categories",
+        "grid": "Grid",
+        "list": "List",
+        "open": "Open",
+        "favorite": "Favorite",
+        "favorites": "favorites",
+        "popular": "Popular",
+        "page": "Books/Page",
+        "new": "NEW",
+        "prev": "Prev",
+        "next": "Next",
+        "refresh": "Refresh",
+        "loading": "Loading books...",
+        "empty_title": "No books found",
+        "empty_subtitle": "Try another search, category, or filter.",
+        "books_found": "books found",
+        "books": "books",
+        "recommended_for_you": "Recommended For You",
+        "book_popular": "Book Popular",
+        "uncategorized": "Uncategorized",
+        "unnamed_category": "Unnamed Category",
+        "unknown_author": "Unknown Author",
+        "untitled": "Untitled",
+        "filters": {
+            "all": "All",
+            "favorites": "Favorites"
+        },
+        "errors": {
+            "load_library": "Failed to load library data.",
+            "load_books": "Failed to load books.",
+            "load_page": "Failed to load page."
+        }
+    },
+
+    "search-page": {
+        "title": "Search",
+        "subtitle": "Find books by title, tags, and popularity",
+        "smart_search": "Smart Search",
+        "hero_title": "Search your library faster",
+        "hero_text": "Best Match ranking with title, partial match, tags, and popularity.",
+        "search_placeholder": "Search books title, tags...",
+        "recent_searches": "Recent Searches",
+        "clear": "Clear",
+        "recent_empty": "Your recent searches will appear here.",
+        "trending_searches": "Trending Searches",
+        "trending_empty": "Trending searches will appear here.",
+        "suggested_books": "Suggested Books",
+        "suggested_empty": "No suggested books available.",
+        "results_for": "Results for",
+        "results_found": "result(s) found",
+        "searching": "Searching...",
+        "best_match": "Best Match",
+        "by": "by",
+        "read_book": "Read Book",
+        "previous": "Previous",
+        "next": "Next",
+        "no_results": "No results found",
+        "try_another": "Try another keyword or tag.",
+        "unknown_author": "Unknown Author",
+        "uncategorized": "Uncategorized",
+        "untitled": "Untitled",
+        "no_description": "No description available.",
+        "pdf_preview": "PDF Preview",
+        "filters": {
+            "best_match": "Best Match",
+            "most_popular": "Most Popular",
+            "newest": "Newest"
+        }
+    },
+
+    "chat-page": {
+        "title": "Messages",
+        "home": "Home",
+        "chats": "Chats",
+        "search": "Search",
+        "search_placeholder": "Search conversations...",
+        "clear": "Clear",
+        "new_group": "New Group",
+        "results": "Results",
+        "recent": "Recent",
+        "loading": "Loading...",
+        "no_results_for": "No results for",
+        "no_conversations": "No conversations yet",
+        "error_title": "Error"
+    },
+
+    "chat-view": {
+        "back": "Back",
+        "chat": "Chat",
+        "group": "Group",
+        "direct": "Direct",
+        "chat_avatar": "Chat avatar",
+        "user_avatar": "User avatar",
+        "edit_chat": "Edit Chat",
+        "loading_older": "Loading older messages...",
+        "empty_messages": "No messages yet. Start a conversation!",
+        "unknown_user": "Unknown",
+        "edited": "edited",
+        "edit": "Edit",
+        "delete": "Delete",
+        "edit_message_placeholder": "Edit message...",
+        "save": "Save",
+        "cancel": "Cancel",
+        "image": "Image",
+        "download_file": "Download file",
+        "unsupported_message": "Unsupported message type.",
+        "clear_file": "Clear file",
+        "paused": "Paused",
+        "recording": "Recording...",
+        "resume": "Resume",
+        "pause": "Pause",
+        "send": "Send",
+        "attach_file": "Attach file",
+        "type_message": "Type a message...",
+        "record_voice": "Record voice",
+        "error_title": "Error",
+        "error_message": "Something went wrong.",
+        "validation_error": "Validation Error",
+        "invalid_input": "Invalid input",
+        "microphone_denied": "Microphone access denied. Please allow microphone permissions.",
+        "delete_confirm_title": "Delete this message?",
+        "delete_confirm_text": "You won't be able to revert this!",
+        "delete_confirm_button": "Yes, delete it!"
+    },
+
+    "chat-modal": {
+        "title": "Chat",
+        "create_subtitle": "Create a new group chat",
+        "close": "Close",
+        "profile_picture": "Chat profile picture",
+        "upload": "Upload",
+        "remove": "Remove",
+        "reset": "Reset",
+        "group": "Group",
+        "direct": "Direct",
+        "name": "Name",
+        "enter_group_name": "Enter group name",
+        "enter_name": "Enter name",
+        "add_members": "Add Members",
+        "search_users": "Search users by name or email...",
+        "search_users_to_add": "Search users to add...",
+        "user_avatar": "User avatar",
+        "no_users_found": "No users found.",
+        "selected_members": "Selected members",
+        "members": "Members",
+        "members_count": "member(s)",
+        "loading_members": "Loading members...",
+        "admin": "Admin",
+        "remove_member": "Remove member",
+        "no_other_members": "No other members.",
+        "load_more": "Load More",
+        "delete_chat": "Delete Chat",
+        "leave": "Leave",
+        "delete_group": "Delete Group",
+        "update": "Update",
+        "update_chat": "Update Chat",
+        "create_chat": "Create Chat",
+        "cancel": "Cancel",
+        "error_title": "Error",
+        "error_message": "Something went wrong.",
+        "photo_invalid": "Only jpg/jpeg and png files are allowed!",
+        "this_user": "this user",
+        "remove_member_title": "Remove Member",
+        "remove_member_text": "Are you sure you want to remove {name} from this chat?",
+        "remove_member_confirm": "Yes, remove!",
+        "delete_group_title": "Delete Chat",
+        "delete_group_text": "Are you sure you want to delete this group chat? This action cannot be undone.",
+        "delete_chat_title": "Delete Chat",
+        "delete_chat_text": "Are you sure you want to delete this direct chat? This action cannot be undone.",
+        "delete_confirm": "Yes, delete it!",
+        "leave_chat_title": "Leave Chat",
+        "leave_chat_text": "Are you sure you want to leave this chat?",
+        "leave_confirm": "Yes, leave!"
+    },
+
+    "chat-option": {
+        "chat_photo": "Chat photo",
+        "group": "Group",
+        "unknown": "Unknown",
+        "no_messages_group": "No messages in this group",
+        "no_messages": "No messages yet",
+        "photo": "Photo",
+        "video": "Video",
+        "audio": "Audio",
+        "file": "File",
+        "link": "Link",
+        "group_created": "Group created",
+        "new_conversation": "New conversation"
+    },
+
+    "user-option": {
+        "open_chat_with": "Open chat with {name}",
+        "user_photo": "User photo",
+        "unknown_user": "Unknown User",
+        "no_email": "No email",
+        "error_title": "Error",
+        "error_message": "Failed to create chat."
+    },
+
+    "logout": {
+        "confirm_title": "Are you sure?",
+        "confirm_text": "You will be logged out of your account.",
+        "confirm_button": "Yes, log out",
+        "cancel_button": "Cancel",
+        "error_title": "Error",
+        "error_message": "Failed to log out."
+    },
+
+    "users": "Users List",
+    "items": "Books List",
+    "profile": "Profile",
+    "library": "Library",
+    "search": "Search",
+    "chats": "Chats List",
+    "categories": "Categories Book",
+    "tags": "Book Tags",
+    "backups": "Backup",
+
+    "filters_are_hidden_click": "Filters are hidden. Click ",
+    "to_open": "to open",
+    "open": "Open",
+    "general_information": "General Information",
+    "organization": "Organization",
+    "address": "Address",
+    "show": "Show",
+    "page": "Page",
+    "of": "of",
+    "record": "Records",
+    "active": "Active",
+    "inactive": "Inactive",
+
+    "settings": "Setting",
+    "system_setting": "System Setting",
+    "system_build": "System Build",
+    "copy_right": "Copy Right",
+    "all_rights_reserved.": "All Rights Reserved.",
+    "system_version": "System Version",
+    "backup": "Backup",
+    "chat": "Chat",
+
+    "email": "Email",
+    "password": "Password",
+    "signin": "Sign In",
+    "signup": "Sign Up",
+    "forgot_password": "Forgot Password",
+    "remember": "Remember Me",
+    "sign_in_to_continue": "Sign In to Continue",
+    "back_to_login": "Back to sign in",
+    "send_reset_link": "Send reset Link",
+
+    "reset_your_password": "Reset your password",
+    "enter_your_email_and_will_send_link": "Enter your email and we’ll send you a reset link."
+
+
+}

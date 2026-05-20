@@ -1,0 +1,31 @@
+#services:
+#  vue-production:
+#    build:
+#      context: .
+#      target: production
+#      args:
+#        VITE_API_URL: https://code-blue.cloud/api
+#    image: my-front-production:latest
+#    container_name: my-front-production-container
+#    ports:
+#      - 3000:80
+
+services:
+  vue-production:
+    build:
+      context: .
+      target: production
+      args:
+        VITE_API_URL: https://code-blue.cloud/api
+        # Reverb Configuration
+        VITE_REVERB_APP_KEY: "fr6ej145c0m9njsh6npy"
+        VITE_REVERB_HOST: "code-blue.cloud"
+        VITE_REVERB_PORT: "443"
+        VITE_REVERB_SCHEME: "https"
+        VITE_REVERB_PATH: ""
+
+
+    image: my-front-production:latest
+    container_name: my-front-production-container
+    ports:
+      - 3000:80
