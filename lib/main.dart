@@ -4,16 +4,21 @@ import 'package:provider/provider.dart';
 import 'config/theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/home_provider.dart';
+import 'providers/notifications_provider.dart';
+import 'providers/pdf_progress_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/user_favorites_provider.dart';
 import 'screens/flash_screen.dart';
+import 'screens/items_details_screen.dart';
+import 'services/local_notification_service.dart';
 import 'utils/app_localizations.dart';
 
-
-
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,10 +31,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => UserFavoritesProvider()),
+        ChangeNotifierProvider(create: (_) => PdfProgressProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationsProvider()),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {
-          return MaterialApp(
+          return _AppWithNotifications(child: MaterialApp(
+            navigatorKey: navigatorKey,
             title: 'E-Library',
             debugShowCheckedModeBanner: false,
             theme: settings.isDark
@@ -43,9 +51,41 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
             ],
             home: const FlashScreen(),
-          );
+          ));
         },
       ),
     );
   }
+}
+
+class _AppWithNotifications extends StatefulWidget {
+  final Widget child;
+  const _AppWithNotifications({required this.child});
+
+  @override
+  State<_AppWithNotifications> createState() => _AppWithNotificationsState();
+}
+
+class _AppWithNotificationsState extends State<_AppWithNotifications> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await LocalNotificationService.instance.initialize(
+        onNotificationTap: (payload) {
+          if (payload != null && payload.isNotEmpty) {
+            navigatorKey.currentState?.push(
+              MaterialPageRoute(
+                builder: (_) => ItemsDetailsScreen.fromBookId(id: payload),
+              ),
+            );
+          }
+        },
+      );
+      context.read<NotificationsProvider>().startPolling();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

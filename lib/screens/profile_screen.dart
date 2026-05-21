@@ -6,10 +6,11 @@ import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_localizations.dart';
-import 'edit_profile_screen.dart';
 import 'about_screen.dart';
+import 'edit_profile_screen.dart';
 import 'help_support_screen.dart';
 import 'login_screen.dart';
+import 'notifications_screen.dart';
 import 'settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -199,6 +200,13 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.notifications_outlined,
               title: loc.translate('notifications'),
               subtitle: loc.translate('reading_reminders'),
+              onTap: () => Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: const NotificationsScreen(),
+                ),
+              ),
             ),
           ], cs, isDark),
           const SizedBox(height: 16),

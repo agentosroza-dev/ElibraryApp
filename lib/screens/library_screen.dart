@@ -7,9 +7,11 @@ import '../config/api_config.dart';
 import '../config/base_url.dart';
 import '../config/theme.dart';
 import '../models/items_model.dart';
+import '../models/pdf_progress_model.dart';
 import '../services/api_client.dart';
 import '../utils/app_localizations.dart';
 import '../models/user_favorites.dart';
+import '../providers/pdf_progress_provider.dart';
 import '../providers/user_favorites_provider.dart';
 import 'read_book_screen.dart';
 import 'user_book_favorites_screen.dart';
@@ -22,20 +24,7 @@ String _coverUrl(String url) {
   return '${BaseURL.base}/storage/$url';
 }
 
-final List<Map<String, dynamic>> _recentlyRead = [
-  {
-    'title': 'Brave New World',
-    'author': 'Aldous Huxley',
-    'image': 'https://covers.openlibrary.org/b/id/12645808-L.jpg',
-    'progress': 0.45,
-  },
-  {
-    'title': 'The Catcher in the Rye',
-    'author': 'J.D. Salinger',
-    'image': 'https://covers.openlibrary.org/b/id/12652713-L.jpg',
-    'progress': 0.72,
-  },
-];
+
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -50,10 +39,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
   @override
   void initState() {
     super.initState();
-    final provider = context.read<UserFavoritesProvider>();
-    if (provider.favorites.isEmpty) {
-      provider.fetchFavorites(refresh: true);
+    final favProvider = context.read<UserFavoritesProvider>();
+    if (favProvider.favorites.isEmpty) {
+      favProvider.fetchFavorites(refresh: true);
     }
+    context.read<PdfProgressProvider>().fetchProgressList(refresh: true);
   }
 
   Future<void> _openFavoriteBook(Favorite book) async {
@@ -105,11 +95,46 @@ class _LibraryScreenState extends State<LibraryScreen> {
     }
   }
 
+  void _openRecentRead(Datum item) {
+    final fileUrl = item.fileUrl;
+    if (fileUrl.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('No file available for this book'),
+            backgroundColor: AppColors.iosGray,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+      return;
+    }
+    final url = '${BaseURL.base}/library/details/view/${item.itemId}/pdf-progress'
+        '?file=$fileUrl'
+        '&title=${Uri.encodeComponent(item.title)}';
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ReadBookScreen(url: url, title: item.title),
+        ),
+      ).then((_) {
+        if (mounted) {
+          context.read<PdfProgressProvider>().fetchProgressList(refresh: true);
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final favProvider = context.watch<UserFavoritesProvider>();
+    final progressProvider = context.watch<PdfProgressProvider>();
 
     return SingleChildScrollView(
       child: Column(
@@ -117,7 +142,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         children: [
           _buildHeader(context, cs),
           _buildFavoritesSection(context, cs, isDark, favProvider),
-          if (_recentlyRead.isNotEmpty) _buildRecentlyRead(context, cs, isDark),
+          _buildRecentlyReadSection(context, cs, isDark, progressProvider),
           const SizedBox(height: 32),
         ],
       ),
@@ -279,8 +304,19 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 
-  Widget _buildRecentlyRead(BuildContext context, ColorScheme cs, bool isDark) {
+  Widget _buildRecentlyReadSection(
+      BuildContext context, ColorScheme cs, bool isDark, PdfProgressProvider provider) {
     final loc = AppLocalizations.of(context);
+
+    if (provider.loading) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 40),
+        child: Center(child: SpinKitFadingCircle(color: AppColors.iosBlue, size: 36)),
+      );
+    }
+
+    if (provider.progressList.isEmpty) return const SizedBox.shrink();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -304,8 +340,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            children: _recentlyRead.map((book) {
-              return Container(
+            children: provider.progressList.map((item) {
+              final progress = (double.tryParse(item.percent) ?? 0) / 100;
+              return GestureDetector(
+                onTap: () => _openRecentRead(item),
+                child: Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.iosCardDark : AppColors.iosCardLight,
@@ -318,7 +357,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: CachedNetworkImage(
-                          imageUrl: book['image'] as String,
+                          imageUrl: _coverUrl(item.coverUrl),
                           width: 48,
                           height: 64,
                           fit: BoxFit.cover,
@@ -343,7 +382,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              book['title'] as String,
+                              item.title,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15,
@@ -352,7 +391,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              book['author'] as String,
+                              item.authorName,
                               style: TextStyle(
                                 color: AppColors.iosGray,
                                 fontSize: 13,
@@ -362,7 +401,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
-                                value: book['progress'] as double,
+                                value: progress,
                                 minHeight: 5,
                                 backgroundColor: isDark
                                     ? AppColors.iosGrayDark4
@@ -375,7 +414,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        '${((book['progress'] as double) * 100).toInt()}%',
+                        '${(progress * 100).toInt()}%',
                         style: TextStyle(
                           color: cs.primary,
                           fontWeight: FontWeight.w600,
@@ -385,6 +424,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     ],
                   ),
                 ),
+              ),
               );
             }).toList(),
           ),

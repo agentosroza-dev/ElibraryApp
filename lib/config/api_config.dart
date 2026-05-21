@@ -37,4 +37,10 @@ class ApiConfig {
   static const String updateAbout = '/users/about';
 
   static const String userFavorites = '/users/favorites';
+
+  // Notifications
+  static const String notifications = '/notifications';
+  static String notificationRead(int id) => '/notifications/$id/read';
+  static const String notificationReadAll = '/notifications/read-all';
+  static const String notificationClearAll = '/notifications/clear-all';
 }
