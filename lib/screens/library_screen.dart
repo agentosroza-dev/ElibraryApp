@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import '../config/api_config.dart';
+import '../config/base_url.dart';
 import '../config/theme.dart';
+import '../models/items_model.dart';
+import '../services/api_client.dart';
 import '../utils/app_localizations.dart';
+import '../models/user_favorites.dart';
+import '../providers/user_favorites_provider.dart';
+import 'read_book_screen.dart';
+import 'user_book_favorites_screen.dart';
 
-final List<Map<String, String>> _favoriteBooks = [
-  {
-    'title': '1984',
-    'author': 'George Orwell',
-    'image': 'https://covers.openlibrary.org/b/id/12648637-L.jpg',
-  },
-  {
-    'title': 'The Great Gatsby',
-    'author': 'F. Scott Fitzgerald',
-    'image': 'https://covers.openlibrary.org/b/id/7222246-L.jpg',
-  },
-];
+String _coverUrl(String url) {
+  if (url.isEmpty || url == 'null') return '';
+  if (url.startsWith('https://')) return url;
+  if (url.startsWith('http://')) return 'https://${url.substring(7)}';
+  if (url.startsWith('/')) return '${BaseURL.base}$url';
+  return '${BaseURL.base}/storage/$url';
+}
 
 final List<Map<String, dynamic>> _recentlyRead = [
   {
@@ -32,20 +37,86 @@ final List<Map<String, dynamic>> _recentlyRead = [
   },
 ];
 
-class LibraryScreen extends StatelessWidget {
+class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
+
+  @override
+  State<LibraryScreen> createState() => _LibraryScreenState();
+}
+
+class _LibraryScreenState extends State<LibraryScreen> {
+  final ApiClient _client = ApiClient();
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = context.read<UserFavoritesProvider>();
+    if (provider.favorites.isEmpty) {
+      provider.fetchFavorites(refresh: true);
+    }
+  }
+
+  Future<void> _openFavoriteBook(Favorite book) async {
+    final bookId = int.tryParse(book.id);
+    if (bookId == null) return;
+
+    try {
+      final response = await _client.get(ApiConfig.item(bookId), authenticate: true);
+      final itemJson = response['data'] is Map<String, dynamic>
+          ? response['data'] as Map<String, dynamic>
+          : response;
+      final item = ItemData.fromJson(itemJson);
+      final fileUrl = item.fileUrl;
+      if (fileUrl == null || fileUrl.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('No file available for this book'),
+              backgroundColor: AppColors.iosGray,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          );
+        }
+        return;
+      }
+      final url = '${BaseURL.base}/library/details/view/${item.id}/pdf-progress'
+          '?file=$fileUrl'
+          '&title=${Uri.encodeComponent(item.title)}';
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ReadBookScreen(url: url, title: item.title),
+          ),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Failed to load book'),
+            backgroundColor: AppColors.iosRed,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final favProvider = context.watch<UserFavoritesProvider>();
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(context, cs),
-          if (_favoriteBooks.isNotEmpty) _buildFavorites(context, cs, isDark),
+          _buildFavoritesSection(context, cs, isDark, favProvider),
           if (_recentlyRead.isNotEmpty) _buildRecentlyRead(context, cs, isDark),
           const SizedBox(height: 32),
         ],
@@ -74,8 +145,44 @@ class LibraryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFavorites(BuildContext context, ColorScheme cs, bool isDark) {
+  Widget _buildFavoritesSection(BuildContext context, ColorScheme cs, bool isDark, UserFavoritesProvider favProvider) {
+    if (favProvider.loading) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 40),
+        child: Center(child: SpinKitFadingCircle(color: AppColors.iosBlue, size: 36)),
+      );
+    }
+    if (favProvider.error != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.error_outline, size: 40, color: cs.error.withValues(alpha: 0.7)),
+              const SizedBox(height: 12),
+              Text(
+                favProvider.error!,
+                style: TextStyle(color: cs.error, fontSize: 13),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => favProvider.fetchFavorites(refresh: true),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    if (favProvider.favorites.isEmpty) return const SizedBox.shrink();
+    return _buildFavorites(context, cs, isDark, favProvider);
+  }
+
+  Widget _buildFavorites(BuildContext context, ColorScheme cs, bool isDark, UserFavoritesProvider favProvider) {
     final loc = AppLocalizations.of(context);
+    final favs = favProvider.favorites;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -98,12 +205,18 @@ class LibraryScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                loc.translate('see_all'),
-                style: TextStyle(
-                  color: cs.primary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const UserBookFavoritesScreen()),
+                ),
+                child: Text(
+                  loc.translate('see_all'),
+                  style: TextStyle(
+                    color: cs.primary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
@@ -114,46 +227,49 @@ class LibraryScreen extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _favoriteBooks.length,
+            itemCount: favs.length,
             separatorBuilder: (_, _) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
-              final book = _favoriteBooks[index];
-              return SizedBox(
-                width: 120,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(
-                          imageUrl: book['image']!,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          placeholder: (_, _) => Skeletonizer(
-                            child: Container(
-                              color: isDark ? AppColors.iosGrayDark5 : AppColors.iosGray6,
+              final book = favs[index];
+              return GestureDetector(
+                onTap: () => _openFavoriteBook(book),
+                child: SizedBox(
+                  width: 120,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            imageUrl: _coverUrl(book.image),
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            placeholder: (_, _) => Skeletonizer(
+                              child: Container(
+                                color: isDark ? AppColors.iosGrayDark5 : AppColors.iosGray6,
+                              ),
                             ),
-                          ),
-                          errorWidget: (_, _, _) => Container(
-                            color: isDark ? AppColors.iosGrayDark5 : AppColors.iosGray6,
-                            child: Icon(Icons.book, size: 40, color: AppColors.iosGray),
+                            errorWidget: (_, _, _) => Container(
+                              color: isDark ? AppColors.iosGrayDark5 : AppColors.iosGray6,
+                              child: Icon(Icons.book, size: 40, color: AppColors.iosGray),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      book['title']!,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                        color: cs.onSurface,
+                      const SizedBox(height: 8),
+                      Text(
+                        book.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                          color: cs.onSurface,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

@@ -19,6 +19,7 @@ class ApiConfig {
 
   static String item(int id) => '/items/$id';
   static String favorite(int bookId) => '/books/$bookId/favorite';
+  static String favoriteCheck(int bookId) => '/books/$bookId/favorite/check';
   static String chatMessages(int chatId) => '/chats/$chatId/messages';
 
   // Home page
@@ -34,4 +35,6 @@ class ApiConfig {
   static const String passwordCreate = '/password/create';
   static const String updatePhoto = '/update/photo';
   static const String updateAbout = '/users/about';
+
+  static const String userFavorites = '/users/favorites';
 }

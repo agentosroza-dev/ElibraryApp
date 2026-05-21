@@ -8,14 +8,14 @@ class BookItem {
   String id;
   String title;
   String authorName;
-  String? coverUrl;
+  String coverUrl;
   String categoryName;
 
   BookItem({
     required this.id,
     required this.title,
     required this.authorName,
-    this.coverUrl,
+    this.coverUrl = '',
     this.categoryName = '',
   });
 
@@ -24,7 +24,7 @@ class BookItem {
       id: '${json['id']}',
       title: '${json['title']}',
       authorName: '${json['author_name']}',
-      coverUrl: json['cover_url'] != null ? '${json['cover_url']}' : null,
+      coverUrl: '${json['cover_url']}',
       categoryName: '${json['category_name']}',
     );
   }
@@ -35,7 +35,7 @@ class ContinueReadingItem {
   String itemId;
   String title;
   String authorName;
-  String? coverUrl;
+  String coverUrl;
   String lastPage;
   String totalPages;
   String percent;
@@ -45,7 +45,7 @@ class ContinueReadingItem {
     required this.itemId,
     required this.title,
     required this.authorName,
-    this.coverUrl,
+    this.coverUrl = '',
     required this.lastPage,
     required this.totalPages,
     required this.percent,
@@ -57,7 +57,7 @@ class ContinueReadingItem {
       itemId: '${json['item_id']}',
       title: '${json['title']}',
       authorName: '${json['author_name']}',
-      coverUrl: json['cover_url'] != null ? '${json['cover_url']}' : null,
+      coverUrl: '${json['cover_url']}',
       lastPage: '${json['last_page']}',
       totalPages: '${json['total_pages']}',
       percent: '${json['percent']}',

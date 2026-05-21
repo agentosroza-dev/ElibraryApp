@@ -61,6 +61,16 @@ class ApiClient {
     return _processResponse(response);
   }
 
+  Future<Map<String, dynamic>> delete(
+    String endpoint, {
+    bool authenticate = false,
+  }) async {
+    final uri = Uri.parse('$_baseUrl$endpoint');
+    final headers = await _headers(authenticate: authenticate);
+    final response = await http.delete(uri, headers: headers);
+    return _processResponse(response);
+  }
+
   Map<String, dynamic> _processResponse(http.Response response) {
     final contentType = response.headers['content-type'] ?? '';
     if (!contentType.contains('application/json')) {

@@ -5,8 +5,10 @@ class OverallRecommendedBooks {
 
   factory OverallRecommendedBooks.fromJson(Map<String, dynamic> json) =>
       OverallRecommendedBooks(
-        data: List<RecommendedBook>.from(
-            json["data"].map((x) => RecommendedBook.fromJson(x))),
+        data: json["data"] is List
+            ? List<RecommendedBook>.from(
+                json["data"].map((x) => RecommendedBook.fromJson(x)))
+            : [],
       );
 }
 
@@ -67,7 +69,10 @@ class RecommendedBook {
         categoryName: '${json["category_name"]}',
         createdAt: '${json["created_at"]}',
         updatedAt: '${json["updated_at"]}',
-        tags: List<BookTag>.from(json["tags"].map((x) => BookTag.fromJson(x))),
+        tags: json["tags"] is List
+            ? List<BookTag>.from(
+                json["tags"].map((x) => BookTag.fromJson(x)))
+            : [],
         viewsCount: '${json["views_count"]}',
         popularityScore: '${json["popularity_score"]}',
         favoriteScore: '${json["favorite_score"]}',

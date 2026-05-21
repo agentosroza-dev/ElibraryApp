@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../config/api_config.dart';
 import '../config/base_url.dart';
 import '../config/theme.dart';
 import '../models/items_model.dart';
+import '../providers/user_favorites_provider.dart';
 import '../services/api_client.dart';
 import '../utils/app_localizations.dart';
 import 'read_book_screen.dart';
+
+String _coverUrl(String? url) {
+  if (url == null || url.isEmpty || url == 'null') return '';
+  if (url.startsWith('https://')) return url;
+  if (url.startsWith('http://')) return 'https://${url.substring(7)}';
+  if (url.startsWith('/')) return '${BaseURL.base}$url';
+  return '${BaseURL.base}/storage/$url';
+}
 
 class ItemsDetailsScreen extends StatefulWidget {
   final ItemData? item;
@@ -65,7 +75,13 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
         ApiConfig.item(id),
         authenticate: true,
       );
-      if (mounted) setState(() => _fetchedItem = ItemData.fromJson(response['data'] as Map<String, dynamic>));
+      if (mounted) {
+        final itemJson = response['data'] is Map<String, dynamic>
+            ? response['data'] as Map<String, dynamic>
+            : response;
+        _fetchedItem = ItemData.fromJson(itemJson);
+        _checkFavorite(id);
+      }
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -82,17 +98,40 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
     }
   }
 
+  Future<void> _checkFavorite(int bookId) async {
+    try {
+      final response = await _client.get(
+        ApiConfig.favoriteCheck(bookId),
+        authenticate: true,
+      );
+      if (mounted) {
+        final isFav = response['is_favorite'] == true || response['data']?['is_favorite'] == true;
+        setState(() => _isFavorite = isFav);
+      }
+    } catch (_) {}
+  }
+
   Future<void> _toggleFavorite() async {
     if (_item == null) return;
     setState(() => _isFavoriting = true);
     try {
       final bookId = int.tryParse(_item!.id);
       if (bookId == null) return;
-      await _client.post(
-        ApiConfig.favorite(bookId),
-        authenticate: true,
-      );
-      if (mounted) setState(() => _isFavorite = !_isFavorite);
+      if (_isFavorite) {
+        await _client.delete(
+          ApiConfig.favorite(bookId),
+          authenticate: true,
+        );
+      } else {
+        await _client.post(
+          ApiConfig.favorite(bookId),
+          authenticate: true,
+        );
+      }
+      if (mounted) {
+        setState(() => _isFavorite = !_isFavorite);
+        context.read<UserFavoritesProvider>().fetchFavorites(refresh: true);
+      }
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -141,7 +180,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
     final item = _item;
     final title = item?.title ?? widget.bookTitle ?? '';
     final author = item?.authorName ?? widget.bookAuthor ?? '';
-    final cover = item?.coverUrl ?? widget.bookCover;
+    final cover = _coverUrl(item?.coverUrl ?? widget.bookCover);
     final category = item?.categoryName ?? '';
     final description = item?.description;
     final publishYear = item?.publishYear;
@@ -168,7 +207,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                       bottomRight: Radius.circular(20),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: cover ?? '',
+                      imageUrl: cover,
                       width: double.infinity,
                       height: 280,
                       fit: BoxFit.cover,

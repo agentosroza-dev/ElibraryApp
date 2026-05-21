@@ -2110,9 +2110,9 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/pdf-file/books/filename.pdf",
+              "raw": "{{api_url}}/pdf-file/books/filename.pdf",
               "host": [
-                "{{base_url}}"
+                "{{api_url}}"
               ],
               "path": [
                 "pdf-file",

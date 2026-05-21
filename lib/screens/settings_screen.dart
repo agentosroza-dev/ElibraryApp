@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../providers/settings_provider.dart';
 import '../utils/app_localizations.dart';
+import 'about_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -236,7 +237,11 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.info_outline,
             title: loc.translate('about'),
             subtitle: loc.translate('version'),
-            showChevron: false,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AboutScreen()),
+            ),
+            showChevron: true,
           ),
         ),
       ],

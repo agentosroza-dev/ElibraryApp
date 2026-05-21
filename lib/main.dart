@@ -5,6 +5,7 @@ import 'config/theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/home_provider.dart';
 import 'providers/settings_provider.dart';
+import 'providers/user_favorites_provider.dart';
 import 'screens/flash_screen.dart';
 import 'utils/app_localizations.dart';
 
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => UserFavoritesProvider()),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {

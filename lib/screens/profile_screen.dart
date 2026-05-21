@@ -7,6 +7,8 @@ import '../config/theme.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_localizations.dart';
 import 'edit_profile_screen.dart';
+import 'about_screen.dart';
+import 'help_support_screen.dart';
 import 'login_screen.dart';
 import 'settings_screen.dart';
 
@@ -194,11 +196,6 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             _MenuItemData(
-              icon: Icons.download_outlined,
-              title: loc.translate('downloads'),
-              subtitle: loc.translate('manage_offline'),
-            ),
-            _MenuItemData(
               icon: Icons.notifications_outlined,
               title: loc.translate('notifications'),
               subtitle: loc.translate('reading_reminders'),
@@ -210,11 +207,25 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.help_outline,
               title: loc.translate('help_support'),
               subtitle: loc.translate('faqs_contact'),
+              onTap: () => Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: const HelpSupportScreen(),
+                ),
+              ),
             ),
             _MenuItemData(
               icon: Icons.info_outline,
               title: loc.translate('about'),
               subtitle: loc.translate('version'),
+              onTap: () => Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: const AboutScreen(),
+                ),
+              ),
             ),
           ], cs, isDark),
           const SizedBox(height: 24),
