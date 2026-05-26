@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:page_transition/page_transition.dart';
+import '../utils/transitions.dart';
 import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../providers/auth_provider.dart';
@@ -37,7 +37,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader(BuildContext context, ColorScheme cs, bool isDark, AuthProvider auth) {
+  Widget _buildProfileHeader(
+    BuildContext context,
+    ColorScheme cs,
+    bool isDark,
+    AuthProvider auth,
+  ) {
     final loc = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
@@ -96,20 +101,14 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               auth.userEmail,
-              style: TextStyle(
-                color: AppColors.iosGray,
-                fontSize: 15,
-              ),
+              style: TextStyle(color: AppColors.iosGray, fontSize: 15),
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
-                  PageTransition(
-                    type: PageTransitionType.rightToLeft,
-                    child: const EditProfileScreen(),
-                  ),
+                  slideRightToLeftRoute(const EditProfileScreen()),
                 );
               },
               icon: const Icon(Icons.edit, size: 16),
@@ -120,7 +119,10 @@ class ProfileScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
               ),
             ),
           ],
@@ -145,7 +147,13 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String label, String value, ColorScheme cs, bool isDark) {
+  Widget _buildStatCard(
+    BuildContext context,
+    String label,
+    String value,
+    ColorScheme cs,
+    bool isDark,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -166,10 +174,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(
-                color: AppColors.iosGray,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: AppColors.iosGray, fontSize: 12),
             ),
           ],
         ),
@@ -183,69 +188,64 @@ class ProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          _buildMenuGroup(context, [
-            _MenuItemData(
-              icon: Icons.settings_outlined,
-              title: loc.translate('settings'),
-              subtitle: loc.translate('choose_language'),
-              onTap: () => Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: const SettingsScreen(),
+          _buildMenuGroup(
+            context,
+            [
+              _MenuItemData(
+                icon: Icons.settings_outlined,
+                title: loc.translate('settings'),
+                subtitle: loc.translate('choose_language'),
+                onTap: () => Navigator.push(
+                  context,
+                  slideRightToLeftRoute(const SettingsScreen()),
                 ),
               ),
-            ),
-            _MenuItemData(
-              icon: Icons.notifications_outlined,
-              title: loc.translate('notifications'),
-              subtitle: loc.translate('reading_reminders'),
-              onTap: () => Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: const NotificationsScreen(),
+              _MenuItemData(
+                icon: Icons.notifications_outlined,
+                title: loc.translate('notifications'),
+                subtitle: loc.translate('reading_reminders'),
+                onTap: () => Navigator.push(
+                  context,
+                  slideRightToLeftRoute(const NotificationsScreen()),
                 ),
               ),
-            ),
-          ], cs, isDark),
+            ],
+            cs,
+            isDark,
+          ),
           const SizedBox(height: 16),
-          _buildMenuGroup(context, [
-            _MenuItemData(
-              icon: Icons.help_outline,
-              title: loc.translate('help_support'),
-              subtitle: loc.translate('faqs_contact'),
-              onTap: () => Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: const HelpSupportScreen(),
+          _buildMenuGroup(
+            context,
+            [
+              _MenuItemData(
+                icon: Icons.help_outline,
+                title: loc.translate('help_support'),
+                subtitle: loc.translate('faqs_contact'),
+                onTap: () => Navigator.push(
+                  context,
+                  slideRightToLeftRoute(const HelpSupportScreen()),
                 ),
               ),
-            ),
-            _MenuItemData(
-              icon: Icons.info_outline,
-              title: loc.translate('about'),
-              subtitle: loc.translate('version'),
-              onTap: () => Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: const AboutScreen(),
+              _MenuItemData(
+                icon: Icons.info_outline,
+                title: loc.translate('about'),
+                subtitle: loc.translate('version'),
+                onTap: () => Navigator.push(
+                  context,
+                  slideRightToLeftRoute(const AboutScreen()),
                 ),
               ),
-            ),
-          ], cs, isDark),
+            ],
+            cs,
+            isDark,
+          ),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () {
                 Navigator.of(context).pushAndRemoveUntil(
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    child: const LoginScreen(),
-                  ),
+                  fadeRoute(const LoginScreen()),
                   (route) => false,
                 );
               },
@@ -255,7 +255,9 @@ class ProfileScreen extends StatelessWidget {
                 style: const TextStyle(color: AppColors.iosRed),
               ),
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: AppColors.iosRed.withValues(alpha: 0.3)),
+                side: BorderSide(
+                  color: AppColors.iosRed.withValues(alpha: 0.3),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -268,7 +270,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuGroup(BuildContext context, List<_MenuItemData> items, ColorScheme cs, bool isDark) {
+  Widget _buildMenuGroup(
+    BuildContext context,
+    List<_MenuItemData> items,
+    ColorScheme cs,
+    bool isDark,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.iosCardDark : AppColors.iosCardLight,
@@ -296,7 +303,11 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(BuildContext context, _MenuItemData item, ColorScheme cs) {
+  Widget _buildMenuItem(
+    BuildContext context,
+    _MenuItemData item,
+    ColorScheme cs,
+  ) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -331,10 +342,7 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       item.subtitle,
-                      style: TextStyle(
-                        color: AppColors.iosGray,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: AppColors.iosGray, fontSize: 12),
                     ),
                   ],
                 ),

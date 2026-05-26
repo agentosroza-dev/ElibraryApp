@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:page_transition/page_transition.dart';
+import '../utils/transitions.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../config/theme.dart';
@@ -44,16 +44,16 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     if (success) {
-      Navigator.of(context).pushReplacement(
-        PageTransition(type: PageTransitionType.fade, child: const MainShell()),
-      );
+      Navigator.of(context).pushReplacement(fadeRoute(const MainShell()));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(authProvider.error ?? loc.translate('login_failed')),
           backgroundColor: AppColors.iosRed,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     }
@@ -65,8 +65,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Image.asset('assets/images/PAC_location.jpg', width: double.infinity, height: double.infinity, fit: BoxFit.cover),
-          Container(color: AppColors.iosBackgroundDark.withValues(alpha: 0.6)),
+          Image.asset(
+            'assets/images/PAC_location.jpg',
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Container(color: AppColors.iosBackgroundDark.withValues(alpha: 0.2)),
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -74,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
-                  AppColors.iosBackgroundDark.withValues(alpha: 0.3),
+                  AppColors.iosBackgroundDark.withValues(alpha: 0.1),
                 ],
               ),
             ),
@@ -92,7 +97,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         duration: const Duration(milliseconds: 600),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.asset('assets/images/PAC_E-Library.png', height: 80),
+                          child: Image.asset(
+                            'assets/images/PAC_E-Library.png',
+                            height: 80,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -104,11 +112,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 32,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.12),
+                                ),
                               ),
                               child: Column(
                                 children: [
@@ -124,7 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Text(
                                     loc.translate('sign_in_continue'),
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.65),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.65,
+                                      ),
                                       fontSize: 15,
                                     ),
                                   ),
@@ -135,8 +150,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     icon: Icons.email_outlined,
                                     keyboardType: TextInputType.emailAddress,
                                     validator: (v) {
-                                      if (v == null || v.isEmpty) return loc.translate('enter_email');
-                                      if (!EmailValidator.validate(v)) return loc.translate('valid_email');
+                                      if (v == null || v.isEmpty) {
+                                        return loc.translate('enter_email');
+                                      }
+                                      if (!EmailValidator.validate(v)) {
+                                        return loc.translate('valid_email');
+                                      }
                                       return null;
                                     },
                                   ),
@@ -148,15 +167,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                     obscure: _obscurePassword,
                                     suffix: IconButton(
                                       icon: Icon(
-                                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                                        color: Colors.white.withValues(alpha: 0.5),
+                                        _obscurePassword
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        color: Colors.white.withValues(
+                                          alpha: 0.5,
+                                        ),
                                         size: 20,
                                       ),
-                                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                      onPressed: () => setState(
+                                        () => _obscurePassword =
+                                            !_obscurePassword,
+                                      ),
                                     ),
                                     validator: (v) {
-                                      if (v == null || v.isEmpty) return loc.translate('enter_password');
-                                      if (v.length < 6) return loc.translate('password_min');
+                                      if (v == null || v.isEmpty) {
+                                        return loc.translate('enter_password');
+                                      }
+                                      if (v.length < 6) {
+                                        return loc.translate('password_min');
+                                      }
                                       return null;
                                     },
                                   ),
@@ -167,7 +197,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: Text(
                                         loc.translate('forgot_password'),
                                         style: TextStyle(
-                                          color: Colors.white.withValues(alpha: 0.65),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.65,
+                                          ),
                                           fontSize: 14,
                                         ),
                                       ),
@@ -180,12 +212,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                         width: double.infinity,
                                         height: 50,
                                         child: ElevatedButton(
-                                          onPressed: auth.isLoading ? null : _handleLogin,
+                                          onPressed: auth.isLoading
+                                              ? null
+                                              : _handleLogin,
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: AppColors.iosBlue,
                                             foregroundColor: Colors.white,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             elevation: 0,
                                           ),
@@ -210,22 +245,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                     children: [
                                       Expanded(
                                         child: Divider(
-                                          color: Colors.white.withValues(alpha: 0.12),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.12,
+                                          ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                        ),
                                         child: Text(
                                           loc.translate('or_continue_with'),
                                           style: TextStyle(
-                                            color: Colors.white.withValues(alpha: 0.5),
+                                            color: Colors.white.withValues(
+                                              alpha: 0.5,
+                                            ),
                                             fontSize: 13,
                                           ),
                                         ),
                                       ),
                                       Expanded(
                                         child: Divider(
-                                          color: Colors.white.withValues(alpha: 0.12),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.12,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -233,26 +276,47 @@ class _LoginScreenState extends State<LoginScreen> {
                                   const SizedBox(height: 20),
                                   Consumer<SettingsProvider>(
                                     builder: (context, settings, _) {
-                                      final isEn = settings.localePreference == AppLocalePreference.english;
+                                      final isEn =
+                                          settings.localePreference ==
+                                          AppLocalePreference.english;
                                       return Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           GestureDetector(
-                                            onTap: () => settings.setLocale(AppLocalePreference.english),
+                                            onTap: () => settings.setLocale(
+                                              AppLocalePreference.english,
+                                            ),
                                             child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 10,
+                                                  ),
                                               decoration: BoxDecoration(
-                                                color: isEn ? Colors.white.withValues(alpha: 0.15) : Colors.transparent,
-                                                borderRadius: BorderRadius.circular(10),
+                                                color: isEn
+                                                    ? Colors.white.withValues(
+                                                        alpha: 0.15,
+                                                      )
+                                                    : Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                                 border: Border.all(
-                                                  color: Colors.white.withValues(alpha: 0.2),
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.2),
                                                 ),
                                               ),
                                               child: Text(
                                                 loc.translate('english'),
                                                 style: TextStyle(
-                                                  color: isEn ? Colors.white : Colors.white.withValues(alpha: 0.55),
-                                                  fontWeight: isEn ? FontWeight.w700 : FontWeight.w500,
+                                                  color: isEn
+                                                      ? Colors.white
+                                                      : Colors.white.withValues(
+                                                          alpha: 0.55,
+                                                        ),
+                                                  fontWeight: isEn
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w500,
                                                   fontSize: 14,
                                                 ),
                                               ),
@@ -260,21 +324,39 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           const SizedBox(width: 12),
                                           GestureDetector(
-                                            onTap: () => settings.setLocale(AppLocalePreference.khmer),
+                                            onTap: () => settings.setLocale(
+                                              AppLocalePreference.khmer,
+                                            ),
                                             child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 10,
+                                                  ),
                                               decoration: BoxDecoration(
-                                                color: !isEn ? Colors.white.withValues(alpha: 0.15) : Colors.transparent,
-                                                borderRadius: BorderRadius.circular(10),
+                                                color: !isEn
+                                                    ? Colors.white.withValues(
+                                                        alpha: 0.15,
+                                                      )
+                                                    : Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                                 border: Border.all(
-                                                  color: Colors.white.withValues(alpha: 0.2),
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.2),
                                                 ),
                                               ),
                                               child: Text(
                                                 loc.translate('khmer'),
                                                 style: TextStyle(
-                                                  color: !isEn ? Colors.white : Colors.white.withValues(alpha: 0.55),
-                                                  fontWeight: !isEn ? FontWeight.w700 : FontWeight.w500,
+                                                  color: !isEn
+                                                      ? Colors.white
+                                                      : Colors.white.withValues(
+                                                          alpha: 0.55,
+                                                        ),
+                                                  fontWeight: !isEn
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w500,
                                                   fontSize: 14,
                                                 ),
                                               ),
@@ -291,7 +373,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Text(
                                         loc.translate('no_account'),
                                         style: TextStyle(
-                                          color: Colors.white.withValues(alpha: 0.55),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.55,
+                                          ),
                                           fontSize: 14,
                                         ),
                                       ),
@@ -342,7 +426,11 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
-        prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.45), size: 20),
+        prefixIcon: Icon(
+          icon,
+          color: Colors.white.withValues(alpha: 0.45),
+          size: 20,
+        ),
         suffixIcon: suffix,
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.08),
@@ -352,16 +440,23 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.iosBlue.withValues(alpha: 0.6), width: 1.5),
+          borderSide: BorderSide(
+            color: AppColors.iosBlue.withValues(alpha: 0.6),
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.iosRed.withValues(alpha: 0.6)),
+          borderSide: BorderSide(
+            color: AppColors.iosRed.withValues(alpha: 0.6),
+          ),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
       ),
       validator: validator,
     );
   }
-
 }

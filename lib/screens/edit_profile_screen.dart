@@ -20,15 +20,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _setPasswordController = TextEditingController();
-  final _setConfirmPasswordController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureCurrent = true;
   bool _obscureNew = true;
   bool _obscureConfirm = true;
-  bool _obscureSet = true;
-  bool _obscureSetConfirm = true;
+
   bool _nameSaved = false;
   String? _photoBase64;
   bool _photoUploaded = false;
@@ -48,14 +46,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
-    _setPasswordController.dispose();
-    _setConfirmPasswordController.dispose();
+
     super.dispose();
   }
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
-    final picked = await picker.pickImage(source: source, maxWidth: 1024, maxHeight: 1024);
+    final picked = await picker.pickImage(
+      source: source,
+      maxWidth: 1024,
+      maxHeight: 1024,
+    );
     if (picked == null) return;
 
     final bytes = await picked.readAsBytes();
@@ -77,7 +78,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 36, height: 4,
+                width: 36,
+                height: 4,
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
                   color: AppColors.iosGray3,
@@ -87,12 +89,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ListTile(
                 leading: const Icon(Icons.camera_alt_outlined),
                 title: Text(loc.translate('take_photo')),
-                onTap: () { Navigator.pop(ctx); _pickImage(ImageSource.camera); },
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _pickImage(ImageSource.camera);
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library_outlined),
                 title: Text(loc.translate('choose_gallery')),
-                onTap: () { Navigator.pop(ctx); _pickImage(ImageSource.gallery); },
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _pickImage(ImageSource.gallery);
+                },
               ),
             ],
           ),
@@ -115,7 +123,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             content: Text(loc.translate('photo_updated')),
             backgroundColor: AppColors.iosGreen,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       } else {
@@ -124,7 +134,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             content: Text(auth.error ?? loc.translate('failed_photo')),
             backgroundColor: AppColors.iosRed,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       }
@@ -145,7 +157,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           content: Text(loc.translate('name_updated_success')),
           backgroundColor: AppColors.iosGreen,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     } else if (mounted) {
@@ -154,7 +168,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           content: Text(auth.error ?? loc.translate('failed_name')),
           backgroundColor: AppColors.iosRed,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     }
@@ -180,50 +196,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             content: Text(loc.translate('password_changed')),
             backgroundColor: AppColors.iosGreen,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(auth.error ?? loc.translate('failed_password_change')),
+            content: Text(
+              auth.error ?? loc.translate('failed_password_change'),
+            ),
             backgroundColor: AppColors.iosRed,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
-      }
-    }
-  }
-
-  Future<void> _createPassword() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    final loc = AppLocalizations.of(context);
-    final auth = context.read<AuthProvider>();
-    final ok = await auth.createPassword(
-      newPassword: _setPasswordController.text,
-      newPasswordConfirmation: _setConfirmPasswordController.text,
-    );
-    if (mounted) {
-      if (ok) {
-        _setPasswordController.clear();
-        _setConfirmPasswordController.clear();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(loc.translate('password_created')),
-            backgroundColor: AppColors.iosGreen,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(auth.error ?? loc.translate('failed_password_create')),
-            backgroundColor: AppColors.iosRed,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       }
@@ -239,12 +227,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String? Function(String?)? passwordValidator(AppLocalizations l) {
       return (v) {
         if (v == null || v.isEmpty) return l.translate('enter_password_generic');
-        if (v.length < 8) return l.translate('password_8_chars');
-        if (!RegExp(r'[A-Z]').hasMatch(v)) return l.translate('password_uppercase');
-        if (!RegExp(r'[0-9]').hasMatch(v)) return l.translate('password_digit');
-        if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(v)) {
-          return l.translate('password_special');
-        }
+        if (v.length < 6) return l.translate('password_6_chars');
         return null;
       };
     }
@@ -281,90 +264,79 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       padding: const EdgeInsets.fromLTRB(52, 0, 16, 10),
                       child: Text(
                         loc.translate('name_updated'),
-                        style: TextStyle(color: AppColors.iosGreen, fontSize: 12),
+                        style: TextStyle(
+                          color: AppColors.iosGreen,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                 ]),
                 const SizedBox(height: 24),
-                if (!auth.hasPassword) ...[
-                  _buildSectionHeader(loc.translate('set_password'), cs),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-                    child: Text(
-                      loc.translate('set_password_hint'),
-                      style: TextStyle(color: AppColors.iosGray, fontSize: 13),
-                    ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionHeader(loc.translate('change_password'), cs),
+                      _buildCard(context, [
+                        _buildPasswordField(
+                          context,
+                          icon: Icons.lock_open,
+                          controller: _currentPasswordController,
+                          label: loc.translate('old_password'),
+                          obscure: _obscureCurrent,
+                          toggle: () => setState(
+                            () => _obscureCurrent = !_obscureCurrent,
+                          ),
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
+                              return loc.translate('enter_old_password');
+                            }
+                            return null;
+                          },
+                        ),
+                        _buildDivider(isDark),
+                        _buildPasswordField(
+                          context,
+                          icon: Icons.lock_outline,
+                          controller: _newPasswordController,
+                          label: loc.translate('new_password'),
+                          obscure: _obscureNew,
+                          toggle: () =>
+                              setState(() => _obscureNew = !_obscureNew),
+                          validator: passwordValidator(loc),
+                        ),
+                        _buildDivider(isDark),
+                        _buildPasswordField(
+                          context,
+                          icon: Icons.lock_outline,
+                          controller: _confirmPasswordController,
+                          label: loc.translate('confirm_password'),
+                          obscure: _obscureConfirm,
+                          toggle: () => setState(
+                            () => _obscureConfirm = !_obscureConfirm,
+                          ),
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
+                              return loc.translate('please_confirm_password');
+                            }
+                            if (v != _newPasswordController.text) {
+                              return loc.translate('passwords_no_match');
+                            }
+                            return null;
+                          },
+                        ),
+                      ]),
+                      const SizedBox(height: 8),
+                      _buildSaveButton(
+                        context,
+                        loc.translate('change_password_btn'),
+                        _changePassword,
+                        auth.isLoading,
+                      ),
+                    ],
                   ),
-                  _buildCard(context, [
-                    _buildPasswordField(
-                      context,
-                      icon: Icons.lock_outline,
-                      controller: _setPasswordController,
-                      label: loc.translate('new_password'),
-                      obscure: _obscureSet,
-                      toggle: () => setState(() => _obscureSet = !_obscureSet),
-                      validator: passwordValidator(loc),
-                    ),
-                    _buildDivider(isDark),
-                    _buildPasswordField(
-                      context,
-                      icon: Icons.lock_outline,
-                      controller: _setConfirmPasswordController,
-                      label: loc.translate('confirm_password'),
-                      obscure: _obscureSetConfirm,
-                      toggle: () => setState(() => _obscureSetConfirm = !_obscureSetConfirm),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) return loc.translate('please_confirm_password');
-                        if (v != _setPasswordController.text) return loc.translate('passwords_no_match');
-                        return null;
-                      },
-                    ),
-                  ]),
-                  const SizedBox(height: 8),
-                  _buildSaveButton(context, loc.translate('create_password'), _createPassword, auth.isLoading),
-                ] else ...[
-                  _buildSectionHeader(loc.translate('change_password'), cs),
-                  _buildCard(context, [
-                    _buildPasswordField(
-                      context,
-                      icon: Icons.lock_open,
-                    controller: _currentPasswordController,
-                    label: loc.translate('old_password'),
-                      obscure: _obscureCurrent,
-                      toggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) return loc.translate('enter_old_password');
-                        return null;
-                      },
-                    ),
-                    _buildDivider(isDark),
-                    _buildPasswordField(
-                      context,
-                      icon: Icons.lock_outline,
-                      controller: _newPasswordController,
-                      label: loc.translate('new_password'),
-                      obscure: _obscureNew,
-                      toggle: () => setState(() => _obscureNew = !_obscureNew),
-                      validator: passwordValidator(loc),
-                    ),
-                    _buildDivider(isDark),
-                    _buildPasswordField(
-                      context,
-                      icon: Icons.lock_outline,
-                      controller: _confirmPasswordController,
-                      label: loc.translate('confirm_password'),
-                      obscure: _obscureConfirm,
-                      toggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) return loc.translate('please_confirm_password');
-                        if (v != _newPasswordController.text) return loc.translate('passwords_no_match');
-                        return null;
-                      },
-                    ),
-                  ]),
-                  const SizedBox(height: 8),
-                  _buildSaveButton(context, loc.translate('change_password_btn'), _changePassword, auth.isLoading),
-                ],
+                ),
                 const SizedBox(height: 40),
               ],
             ),
@@ -391,8 +363,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: _photoBase64 != null
                       ? MemoryImage(base64Decode(_photoBase64!))
                       : (auth.userPhoto != null
-                          ? CachedNetworkImageProvider(auth.userPhoto!)
-                          : null),
+                            ? CachedNetworkImageProvider(auth.userPhoto!)
+                            : null),
                   child: _photoBase64 == null && auth.userPhoto == null
                       ? Icon(Icons.person, size: 48, color: cs.primary)
                       : null,
@@ -407,11 +379,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       color: cs.primary,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: isDark ? AppColors.iosBackgroundDark : AppColors.iosCardLight,
+                        color: isDark
+                            ? AppColors.iosBackgroundDark
+                            : AppColors.iosCardLight,
                         width: 2,
                       ),
                     ),
-                    child: Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                    child: Icon(
+                      Icons.camera_alt,
+                      size: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
@@ -432,10 +410,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             if (auth.isLoading && _photoBase64 != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
-                child: SpinKitFadingCircle(
-                  size: 20,
-                  color: cs.primary,
-                ),
+                child: SpinKitFadingCircle(size: 20, color: cs.primary),
               ),
           ],
         ),
@@ -604,7 +579,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildSaveButton(BuildContext context, String label, VoidCallback onPressed, bool isLoading) {
+  Widget _buildSaveButton(
+    BuildContext context,
+    String label,
+    VoidCallback onPressed,
+    bool isLoading,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(

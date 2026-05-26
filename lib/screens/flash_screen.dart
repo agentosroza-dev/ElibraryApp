@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:page_transition/page_transition.dart';
+import '../utils/transitions.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_localizations.dart';
@@ -33,19 +33,9 @@ class _FlashScreenState extends State<FlashScreen> {
     if (!mounted) return;
 
     if (auth.isAuthenticated) {
-      Navigator.of(context).pushReplacement(
-        PageTransition(
-          type: PageTransitionType.fade,
-          child: const MainShell(),
-        ),
-      );
+      Navigator.of(context).pushReplacement(fadeRoute(const MainShell()));
     } else {
-      Navigator.of(context).pushReplacement(
-        PageTransition(
-          type: PageTransitionType.fade,
-          child: const LoginScreen(),
-        ),
-      );
+      Navigator.of(context).pushReplacement(fadeRoute(const LoginScreen()));
     }
   }
 
