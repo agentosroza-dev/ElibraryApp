@@ -256,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           horizontal: 16,
                                         ),
                                         child: Text(
-                                          loc.translate('or_continue_with'),
+                                          loc.translate('choose_language'),
                                           style: TextStyle(
                                             color: Colors.white.withValues(
                                               alpha: 0.5,
