@@ -435,9 +435,12 @@ class _LoginScreenState extends State<LoginScreen> {
         suffixIcon: suffix,
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.08),
-        border: OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: Colors.white.withValues(alpha: 0.2),
+            width: 1.0,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -450,6 +453,14 @@ class _LoginScreenState extends State<LoginScreen> {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
             color: AppColors.iosRed.withValues(alpha: 0.6),
+            width: 1.0,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColors.iosRed.withValues(alpha: 0.8),
+            width: 1.5,
           ),
         ),
         contentPadding: const EdgeInsets.symmetric(

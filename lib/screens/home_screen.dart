@@ -43,12 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const HomeHeader(),
-                if (home.overallRecommended.isNotEmpty)
-                  HomeBanner(books: home.overallRecommended),
-                if (!home.isLoading) HomeCategories(cats: home.categories),
                 if (home.isLoading)
                   const HomeLoadingState()
                 else ...[
+                  if (home.overallRecommended.isNotEmpty)
+                    HomeBanner(books: home.overallRecommended),
+                  HomeCategories(cats: home.categories),
                   if (home.overallRecommended.isNotEmpty)
                     HomeRecommendedSection(
                       books: home.overallRecommended,
