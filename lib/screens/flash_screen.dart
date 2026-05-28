@@ -5,6 +5,7 @@ import '../utils/transitions.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 import 'login_screen.dart';
 import 'main_shell.dart';
 
@@ -72,7 +73,7 @@ class _FlashScreenState extends State<FlashScreen> {
               child: Text(
                 loc.translate('app_name'),
                 style: TextStyle(
-                  fontSize: 34,
+                  fontSize: context.sp(34),
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                   letterSpacing: 0.5,
@@ -86,7 +87,7 @@ class _FlashScreenState extends State<FlashScreen> {
               child: Text(
                 loc.translate('discover_knowledge'),
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: context.sp(17),
                   color: Colors.white.withValues(alpha: 0.75),
                 ),
               ),

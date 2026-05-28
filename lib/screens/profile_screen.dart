@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 import 'about_screen.dart';
 import 'edit_profile_screen.dart';
 import 'help_support_screen.dart';
@@ -93,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
             Text(
               auth.userName.isNotEmpty ? auth.userName : loc.translate('user'),
               style: TextStyle(
-                fontSize: 22,
+                fontSize: context.sp(22),
                 fontWeight: FontWeight.w700,
                 color: cs.onSurface,
               ),
@@ -101,7 +102,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               auth.userEmail,
-              style: TextStyle(color: AppColors.iosGray, fontSize: 15),
+              style: TextStyle(color: AppColors.iosGray, fontSize: context.sp(15)),
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(
@@ -166,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
             Text(
               value,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: context.sp(24),
                 fontWeight: FontWeight.w700,
                 color: cs.primary,
               ),
@@ -174,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(color: AppColors.iosGray, fontSize: 12),
+              style: TextStyle(color: AppColors.iosGray, fontSize: context.sp(12)),
             ),
           ],
         ),
@@ -335,14 +336,14 @@ class ProfileScreen extends StatelessWidget {
                       item.title,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 15,
+                        fontSize: context.sp(15),
                         color: cs.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       item.subtitle,
-                      style: TextStyle(color: AppColors.iosGray, fontSize: 12),
+                      style: TextStyle(color: AppColors.iosGray, fontSize: context.sp(12)),
                     ),
                   ],
                 ),

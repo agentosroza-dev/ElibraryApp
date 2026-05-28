@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../config/theme.dart';
 import '../../models/categories_model.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/font_scale.dart';
 import '../category_books_screen.dart';
 
 const Map<String, IconData> _categoryIcons = {
@@ -48,17 +49,17 @@ class HomeCategories extends StatelessWidget {
             children: [
               Text(
                 loc.translate('categories'),
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: cs.onSurface,
-                ),
+              style: TextStyle(
+                fontSize: context.sp(22),
+                fontWeight: FontWeight.w700,
+                color: cs.onSurface,
               ),
-              Text(
-                loc.translate('see_all'),
-                style: TextStyle(
-                  color: cs.primary,
-                  fontSize: 14,
+            ),
+            Text(
+              loc.translate('see_all'),
+              style: TextStyle(
+                color: cs.primary,
+                fontSize: context.sp(14),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -127,12 +128,16 @@ class _HomeCategoryChip extends StatelessWidget {
           children: [
             Icon(icon, size: 16, color: cs.primary),
             const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                color: cs.onSurface,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: cs.onSurface,
+                  fontSize: context.sp(14),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],

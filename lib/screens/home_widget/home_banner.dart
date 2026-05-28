@@ -6,6 +6,7 @@ import '../../config/base_url.dart';
 import '../../config/theme.dart';
 import '../../models/overall_recommended_books.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/font_scale.dart';
 import '../items_details_screen.dart';
 import '../read_book_screen.dart';
 
@@ -89,20 +90,22 @@ class HomeBanner extends StatelessWidget {
                             children: [
                               Text(
                                 book.title,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: context.sp(20),
+                                fontWeight: FontWeight.w700,
+                              ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 6),
                               Text(
                                 book.authorName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.65),
-                                  fontSize: 13,
+                                  fontSize: context.sp(13),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -131,7 +134,7 @@ class HomeBanner extends StatelessWidget {
                                     loc.translate('read_now'),
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 13,
+                                      fontSize: context.sp(13),
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),

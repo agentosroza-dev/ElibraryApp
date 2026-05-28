@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../config/theme.dart';
 import '../../models/categories_model.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/font_scale.dart';
 import '../category_books_screen.dart';
 
 class HomeCategoryBrowse extends StatelessWidget {
@@ -50,7 +51,7 @@ class HomeCategoryBrowse extends StatelessWidget {
                     Text(
                       loc.translate('categories'),
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: context.sp(17),
                         fontWeight: FontWeight.w600,
                         color: cs.onSurface,
                       ),
@@ -59,7 +60,7 @@ class HomeCategoryBrowse extends StatelessWidget {
                     Text(
                       'Browse all categories',
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: context.sp(13),
                         color: AppColors.iosGray,
                       ),
                     ),

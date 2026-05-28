@@ -10,9 +10,11 @@ import '../models/items_model.dart';
 import '../models/pdf_progress_model.dart';
 import '../services/api_client.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 import '../models/user_favorites.dart';
 import '../providers/pdf_progress_provider.dart';
 import '../providers/user_favorites_provider.dart';
+import 'items_details_screen.dart';
 import 'read_book_screen.dart';
 import 'user_book_favorites_screen.dart';
 
@@ -44,55 +46,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
       favProvider.fetchFavorites(refresh: true);
     }
     context.read<PdfProgressProvider>().fetchProgressList(refresh: true);
-  }
-
-  Future<void> _openFavoriteBook(Favorite book) async {
-    final bookId = int.tryParse(book.id);
-    if (bookId == null) return;
-
-    try {
-      final response = await _client.get(ApiConfig.item(bookId), authenticate: true);
-      final itemJson = response['data'] is Map<String, dynamic>
-          ? response['data'] as Map<String, dynamic>
-          : response;
-      final item = ItemData.fromJson(itemJson);
-      final fileUrl = item.fileUrl;
-      if (fileUrl == null || fileUrl.isEmpty) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('No file available for this book'),
-              backgroundColor: AppColors.iosGray,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-          );
-        }
-        return;
-      }
-      final url = '${BaseURL.base}/library/details/view/${item.id}/pdf-progress'
-          '?file=$fileUrl'
-          '&title=${Uri.encodeComponent(item.title)}';
-      if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ReadBookScreen(url: url, title: item.title),
-          ),
-        );
-      }
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Failed to load book'),
-            backgroundColor: AppColors.iosRed,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
-      }
-    }
   }
 
   void _openRecentRead(Datum item) {
@@ -161,7 +114,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       child: Text(
         loc.translate('library'),
         style: TextStyle(
-          fontSize: 28,
+          fontSize: context.sp(28),
           fontWeight: FontWeight.w700,
           color: cs.onSurface,
           letterSpacing: -0.5,
@@ -188,7 +141,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               const SizedBox(height: 12),
               Text(
                 favProvider.error!,
-                style: TextStyle(color: cs.error, fontSize: 13),
+                style: TextStyle(color: cs.error, fontSize: context.sp(13)),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
@@ -223,7 +176,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   Text(
                     loc.translate('favorites'),
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: context.sp(22),
                       fontWeight: FontWeight.w700,
                       color: cs.onSurface,
                     ),
@@ -239,7 +192,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   loc.translate('see_all'),
                   style: TextStyle(
                     color: cs.primary,
-                    fontSize: 14,
+                    fontSize: context.sp(14),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -257,7 +210,17 @@ class _LibraryScreenState extends State<LibraryScreen> {
             itemBuilder: (context, index) {
               final book = favs[index];
               return GestureDetector(
-                onTap: () => _openFavoriteBook(book),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ItemsDetailsScreen.fromBookId(
+                      id: book.id,
+                      title: book.title,
+                      author: book.author,
+                      cover: book.image,
+                    ),
+                  ),
+                ),
                 child: SizedBox(
                   width: 120,
                   child: Column(
@@ -287,7 +250,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         book.title,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 13,
+                          fontSize: context.sp(13),
                           color: cs.onSurface,
                         ),
                         maxLines: 1,
@@ -329,7 +292,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               Text(
                 loc.translate('recently_read'),
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: context.sp(22),
                   fontWeight: FontWeight.w700,
                   color: cs.onSurface,
                 ),
@@ -383,18 +346,22 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           children: [
                             Text(
                               item.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 15,
+                                fontSize: context.sp(15),
                                 color: cs.onSurface,
                               ),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               item.authorName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: AppColors.iosGray,
-                                fontSize: 13,
+                                fontSize: context.sp(13),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -418,7 +385,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         style: TextStyle(
                           color: cs.primary,
                           fontWeight: FontWeight.w600,
-                          fontSize: 13,
+                          fontSize: context.sp(13),
                         ),
                       ),
                     ],

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../providers/settings_provider.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 import 'about_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -15,8 +16,8 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           loc.translate('settings'),
-          style: const TextStyle(
-            fontSize: 17,
+          style: TextStyle(
+            fontSize: context.sp(17),
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -35,13 +36,13 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title, ColorScheme cs) {
+  Widget _buildSectionHeader(BuildContext context, String title, ColorScheme cs) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
       child: Text(
         title.toUpperCase(),
         style: TextStyle(
-          fontSize: 12,
+          fontSize: context.sp(12),
           fontWeight: FontWeight.w600,
           color: AppColors.iosGray,
           letterSpacing: 0.5,
@@ -57,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(loc.translate('appearance'), cs),
+        _buildSectionHeader(context, loc.translate('appearance'), cs),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
@@ -161,7 +162,7 @@ class SettingsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(loc.translate('language'), cs),
+        _buildSectionHeader(context, loc.translate('language'), cs),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
@@ -225,7 +226,7 @@ class SettingsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(loc.translate('general'), cs),
+        _buildSectionHeader(context, loc.translate('general'), cs),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
@@ -286,17 +287,17 @@ class SettingsScreen extends StatelessWidget {
                       title,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 15,
+                        fontSize: context.sp(15),
                         color: cs.onSurface,
                       ),
                     ),
                     const SizedBox(height: 1),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        color: AppColors.iosGray,
-                        fontSize: 12,
-                      ),
+                        style: TextStyle(
+                          color: AppColors.iosGray,
+                          fontSize: context.sp(12),
+                        ),
                     ),
                   ],
                 ),

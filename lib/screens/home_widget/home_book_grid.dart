@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../config/base_url.dart';
 import '../../config/theme.dart';
 import '../../providers/home_provider.dart';
+import '../../utils/font_scale.dart';
 import '../items_details_screen.dart';
 
 String _coverUrl(String url) {
@@ -77,7 +78,7 @@ class HomeBookGrid extends StatelessWidget {
                           book.title,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 13,
+                            fontSize: context.sp(13),
                             color: cs.onSurface,
                           ),
                           maxLines: 2,
@@ -86,10 +87,10 @@ class HomeBookGrid extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           book.authorName,
-                          style: TextStyle(
-                            color: AppColors.iosGray,
-                            fontSize: 11,
-                          ),
+                            style: TextStyle(
+                              color: AppColors.iosGray,
+                              fontSize: context.sp(11),
+                            ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

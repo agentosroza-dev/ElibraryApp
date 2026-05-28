@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../providers/home_provider.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/font_scale.dart';
 import 'home_book_horizontal_list.dart';
 
 class HomeBookSection extends StatelessWidget {
@@ -23,17 +24,17 @@ class HomeBookSection extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+              style: TextStyle(
+                fontSize: context.sp(22),
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
-              Text(
-                loc.translate('see_all'),
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 14,
+            ),
+            Text(
+              loc.translate('see_all'),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: context.sp(14),
                   fontWeight: FontWeight.w600,
                 ),
               ),

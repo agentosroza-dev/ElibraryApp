@@ -5,6 +5,7 @@ import '../../config/base_url.dart';
 import '../../config/theme.dart';
 import '../../providers/home_provider.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/font_scale.dart';
 
 String _coverUrl(String url) {
   if (url.isEmpty || url == 'null') return '';
@@ -39,7 +40,7 @@ class HomeContinueReading extends StatelessWidget {
                   Text(
                     loc.translate('continue_reading'),
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: context.sp(22),
                       fontWeight: FontWeight.w700,
                       color: cs.onSurface,
                     ),
@@ -50,7 +51,7 @@ class HomeContinueReading extends StatelessWidget {
                 loc.translate('see_all'),
                 style: TextStyle(
                   color: cs.primary,
-                  fontSize: 14,
+                  fontSize: context.sp(14),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -124,7 +125,7 @@ class HomeContinueReading extends StatelessWidget {
                       book.title,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: context.sp(14),
                         color: cs.onSurface,
                       ),
                       maxLines: 2,
@@ -133,9 +134,11 @@ class HomeContinueReading extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       '${double.parse(book.percent).toStringAsFixed(0)}${loc.translate('percent_complete')}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: AppColors.iosGray,
-                        fontSize: 12,
+                        fontSize: context.sp(12),
                       ),
                     ),
                   ],

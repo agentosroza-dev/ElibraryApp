@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/overall_recommended_books.dart';
 import '../../providers/home_provider.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/font_scale.dart';
 import 'home_book_grid.dart';
 import 'home_book_horizontal_list.dart';
 
@@ -37,11 +38,11 @@ class HomeRecommendedSection extends StatelessWidget {
             children: [
               Text(
                 loc.translate('recommended'),
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+              style: TextStyle(
+                fontSize: context.sp(22),
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,

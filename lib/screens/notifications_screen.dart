@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../models/notifications_model.dart';
 import '../providers/notifications_provider.dart';
+import '../utils/font_scale.dart';
 import 'items_details_screen.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -103,7 +104,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                   color: cs.error.withValues(alpha: 0.7)),
               const SizedBox(height: 12),
               Text(provider.error!,
-                  style: TextStyle(color: cs.error, fontSize: 13),
+                  style: TextStyle(color: cs.error, fontSize: context.sp(13)),
                   textAlign: TextAlign.center),
               const SizedBox(height: 12),
               TextButton(
@@ -124,7 +125,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
             Icon(Icons.notifications_off, size: 48, color: AppColors.iosGray),
             const SizedBox(height: 12),
             Text('No notifications',
-                style: TextStyle(color: AppColors.iosGray, fontSize: 16)),
+                style: TextStyle(color: AppColors.iosGray, fontSize: context.sp(16))),
           ],
         ),
       );
@@ -174,7 +175,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           child: Text(
             title,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: context.sp(13),
               fontWeight: FontWeight.w600,
               color: AppColors.iosGray,
               letterSpacing: 0.3,
@@ -278,7 +279,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                             notif.title,
                             style: TextStyle(
                               fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500,
-                              fontSize: 15,
+                              fontSize: context.sp(15),
                               color: cs.onSurface,
                             ),
                             maxLines: 1,
@@ -289,7 +290,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                         Text(
                           _relativeTime(notif.createdAt),
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: context.sp(12),
                             color: AppColors.iosGray,
                           ),
                         ),
@@ -300,7 +301,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                       Text(
                         notif.message,
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: context.sp(13),
                           color: AppColors.iosGray,
                         ),
                         maxLines: 1,

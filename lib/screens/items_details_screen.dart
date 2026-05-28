@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:delightful_toast/delight_toast.dart';
+import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -10,7 +12,9 @@ import '../models/items_model.dart';
 import '../providers/user_favorites_provider.dart';
 import '../services/api_client.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 import 'read_book_screen.dart';
+import 'user_book_favorites_screen.dart';
 
 String _coverUrl(String? url) {
   if (url == null || url.isEmpty || url == 'null') return '';
@@ -129,8 +133,58 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
         );
       }
       if (mounted) {
-        setState(() => _isFavorite = !_isFavorite);
+        final newState = !_isFavorite;
+        setState(() => _isFavorite = newState);
         context.read<UserFavoritesProvider>().fetchFavorites(refresh: true);
+        final bookName = _item!.title;
+        final navCtx = context;
+        DelightToastBar(
+          autoDismiss: true,
+          builder: (_) => ToastCard(
+            leading: Icon(
+              newState ? Icons.favorite : Icons.favorite_border,
+              color: newState ? AppColors.iosRed : AppColors.iosGray,
+              size: 28,
+            ),
+            title: Text(
+              bookName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+            subtitle: Text(
+              newState ? 'Added to favorites' : 'Removed from favorites',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(navCtx).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            trailing: newState
+                ? TextButton(
+                    onPressed: () {
+                      DelightToastBar.removeAll();
+                      if (navCtx.mounted) {
+                        Navigator.push(
+                          navCtx,
+                          MaterialPageRoute(
+                            builder: (_) => const UserBookFavoritesScreen(),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text(
+                      'Go',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  )
+                : null,
+          ),
+        ).show(navCtx);
       }
     } catch (_) {
       if (mounted) {
@@ -191,7 +245,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
       appBar: AppBar(
         title: Text(
           title,
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: context.sp(17), fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -229,7 +283,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: context.sp(24),
                         fontWeight: FontWeight.w700,
                         color: cs.onSurface,
                       ),
@@ -241,7 +295,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                       child: Text(
                         author,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: context.sp(16),
                           color: AppColors.iosGray,
                         ),
                       ),
@@ -263,7 +317,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                               category,
                               style: TextStyle(
                                 color: cs.primary,
-                                fontSize: 12,
+                                fontSize: context.sp(12),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -279,7 +333,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                               publishYear,
                               style: TextStyle(
                                 color: cs.tertiary,
-                                fontSize: 12,
+                                fontSize: context.sp(12),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -295,7 +349,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                               language,
                               style: TextStyle(
                                 color: cs.secondary,
-                                fontSize: 12,
+                                fontSize: context.sp(12),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -312,7 +366,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                           Text(
                             loc.translate('tags'),
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: context.sp(13),
                               fontWeight: FontWeight.w600,
                               color: AppColors.iosGray,
                             ),
@@ -333,7 +387,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                               child: Text(
                                 tag.name,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: context.sp(12),
                                   color: cs.onSurface,
                                 ),
                               ),
@@ -348,7 +402,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
                       child: Text(
                         description,
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: context.sp(15),
                           color: isDark ? AppColors.iosGrayDark : AppColors.iosGray2,
                           height: 1.5,
                         ),

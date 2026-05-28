@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:liquid_bottom_nav_bar/liquid_bottom_nav_bar.dart';
 import '../config/theme.dart';
 import '../utils/app_localizations.dart';
 import 'home_screen.dart';
@@ -15,6 +18,7 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
+  bool _isNavBarVisible = true;
 
   final List<Widget> _screens = const [
     HomeScreen(),
@@ -23,79 +27,127 @@ class _MainShellState extends State<MainShell> {
     ProfileScreen(),
   ];
 
+  void _onTabChanged(int i) {
+    setState(() {
+      _currentIndex = i;
+    });
+  }
+
+  void _handleScrollNotification(ScrollNotification notification) {
+    if (notification is UserScrollNotification) {
+      switch (notification.direction) {
+        case ScrollDirection.forward:
+          if (!_isNavBarVisible) {
+            setState(() => _isNavBarVisible = true);
+          }
+          break;
+        case ScrollDirection.reverse:
+          if (_isNavBarVisible) {
+            setState(() => _isNavBarVisible = false);
+          }
+          break;
+        case ScrollDirection.idle:
+          break;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
+    final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bottomPad = MediaQuery.of(context).padding.bottom;
+
+    final items = [
+      LiquidNavItem(
+        icon: Icons.book_outlined,
+        activeIcon: Icons.book,
+        label: loc.translate('home'),
+      ),
+      LiquidNavItem(
+        icon: Icons.search_outlined,
+        activeIcon: Icons.search,
+        label: loc.translate('search'),
+      ),
+      LiquidNavItem(
+        icon: Icons.library_books_outlined,
+        activeIcon: Icons.library_books,
+        label: loc.translate('library'),
+      ),
+      LiquidNavItem(
+        icon: Icons.person_outline,
+        activeIcon: Icons.person,
+        label: loc.translate('profile'),
+      ),
+    ];
+
+    final labelStyle = GoogleFonts.inter(
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      color: AppColors.iosGray,
+    );
+
+    final activeLabelStyle = GoogleFonts.inter(
+      fontSize: 11,
+      fontWeight: FontWeight.w600,
+      color: cs.primary,
+    );
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.iosGrayDark5 : AppColors.iosCardLight,
-          border: Border(
-            top: BorderSide(
-              color: isDark
-                  ? AppColors.iosSeparatorDark.withValues(alpha: 0.3)
-                  : AppColors.iosSeparatorLight.withValues(alpha: 0.08),
-              width: 0.5,
+      body: Stack(
+        children: [
+          NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              _handleScrollNotification(notification);
+              return false;
+            },
+            child: IndexedStack(
+              index: _currentIndex,
+              children: _screens,
             ),
           ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(0, Icons.book_outlined, Icons.book, loc.translate('home')),
-                _buildNavItem(1, Icons.search_outlined, Icons.search, loc.translate('search')),
-                _buildNavItem(2, Icons.library_books_outlined, Icons.library_books, loc.translate('library')),
-                _buildNavItem(3, Icons.person_outline, Icons.person, loc.translate('profile')),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(int index, IconData outlined, IconData filled, String label) {
-    final isSelected = _currentIndex == index;
-    final cs = Theme.of(context).colorScheme;
-
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => setState(() => _currentIndex = index),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected ? cs.primary.withValues(alpha: 0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isSelected ? filled : outlined,
-              size: 24,
-              color: isSelected ? cs.primary : AppColors.iosGray,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? cs.primary : AppColors.iosGray,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                fontSize: 10,
+          if (_isNavBarVisible)
+            Positioned(
+              left: 8,
+              right: 8,
+              bottom: bottomPad - 12,
+              child: LiquidBottomNavBar(
+                currentIndex: _currentIndex,
+                items: items,
+                onTap: _onTabChanged,
+                onDrag: _onTabChanged,
+                showLabel: true,
+                blurSigma: 8,
+                height: 68,
+                style: LiquidNavStyle(
+                  backgroundColor: Colors.transparent,
+                  containerColor: isDark
+                      ? AppColors.iosGrayDark5
+                      : AppColors.iosCardLight,
+                  liquidColor: cs.primary.withValues(alpha: 0.15),
+                  activeIconColor: cs.primary,
+                  inactiveIconColor: AppColors.iosGray,
+                  labelStyle: labelStyle,
+                  activeLabelStyle: activeLabelStyle,
+                  borderRadius: const BorderRadius.all(Radius.circular(32)),
+                  borderSide: BorderSide(
+                    color: isDark
+                        ? AppColors.iosSeparatorDark.withValues(alpha: 0.1)
+                        : AppColors.iosSeparatorLight.withValues(alpha: 0.08),
+                    width: 0.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 24,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../config/theme.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
@@ -19,7 +20,7 @@ class HelpSupportScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           loc.translate('help_support'),
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: context.sp(17), fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -146,13 +147,13 @@ class HelpSupportScreen extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: TextStyle(fontSize: 12, color: AppColors.iosGray),
+                      style: TextStyle(fontSize: context.sp(12), color: AppColors.iosGray),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       value,
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: context.sp(15),
                         fontWeight: FontWeight.w500,
                         color: cs.onSurface,
                       ),
@@ -192,17 +193,17 @@ class HelpSupportScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Police Academy of Cambodia',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: cs.onSurface,
+                            style: TextStyle(
+                              fontSize: context.sp(16),
+                              fontWeight: FontWeight.w600,
+                              color: cs.onSurface,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Phnom Penh, Cambodia',
-                          style: TextStyle(
-                            fontSize: 13,
+                          const SizedBox(height: 2),
+                          Text(
+                            'Phnom Penh, Cambodia',
+                            style: TextStyle(
+                              fontSize: context.sp(13),
                             color: AppColors.iosGray,
                           ),
                         ),
@@ -255,7 +256,7 @@ class HelpSupportScreen extends StatelessWidget {
                             Text(
                               'Open in Google Maps',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: context.sp(14),
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),

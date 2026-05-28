@@ -11,6 +11,7 @@ import '../models/user_favorites.dart';
 import '../services/api_client.dart';
 import '../providers/user_favorites_provider.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 import 'read_book_screen.dart';
 
 String _coverUrl(String url) {
@@ -35,7 +36,7 @@ class UserBookFavoritesScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           loc.translate('favorites'),
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: context.sp(17), fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -54,7 +55,7 @@ class UserBookFavoritesScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         Text(
                           favProvider.error!,
-                          style: TextStyle(color: cs.error, fontSize: 13),
+                          style: TextStyle(color: cs.error, fontSize: context.sp(13)),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
@@ -75,7 +76,7 @@ class UserBookFavoritesScreen extends StatelessWidget {
                           const SizedBox(height: 16),
                           Text(
                             loc.translate('no_favorites'),
-                            style: TextStyle(fontSize: 15, color: AppColors.iosGray),
+                            style: TextStyle(fontSize: context.sp(15), color: AppColors.iosGray),
                           ),
                         ],
                       ),
@@ -137,14 +138,14 @@ class _FavBookCard extends StatelessWidget {
                 children: [
                   Text(
                     book.title,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: cs.onSurface),
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: context.sp(13), color: cs.onSurface),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
                     book.author,
-                    style: TextStyle(color: AppColors.iosGray, fontSize: 11),
+                    style: TextStyle(color: AppColors.iosGray, fontSize: context.sp(11)),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

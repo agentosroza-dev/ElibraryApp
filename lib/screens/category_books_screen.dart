@@ -8,6 +8,7 @@ import '../config/theme.dart';
 import '../models/categories_model.dart';
 import '../providers/category_books_provider.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 import 'items_details_screen.dart';
 
 String _coverUrl(String? url) {
@@ -62,7 +63,7 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
       appBar: AppBar(
         title: Text(
           widget.category.name,
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: context.sp(17), fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -100,7 +101,7 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
               Text(
                 loc.translate('failed_load_books'),
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: context.sp(17),
                   fontWeight: FontWeight.w600,
                   color: cs.onSurface,
                 ),
@@ -137,7 +138,7 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
               loc.translate('no_books_category'),
               style: TextStyle(
                 color: AppColors.iosGray,
-                fontSize: 15,
+                fontSize: context.sp(15),
               ),
             ),
           ],
@@ -182,9 +183,9 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
                         ),
                         child: Text(
                           label,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
+                            style: TextStyle(
+                              fontSize: context.sp(13),
+                              fontWeight: FontWeight.w500,
                             color: selected ? Colors.white : cs.onSurface,
                           ),
                         ),
@@ -257,20 +258,20 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
                               children: [
                                 Text(
                                   book.title,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: cs.onSurface,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: context.sp(13),
+                                  color: cs.onSurface,
                                 ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  book.authorName,
-                                  style: TextStyle(
-                                    color: AppColors.iosGray,
-                                    fontSize: 11,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                book.authorName,
+                                style: TextStyle(
+                                  color: AppColors.iosGray,
+                                  fontSize: context.sp(11),
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,

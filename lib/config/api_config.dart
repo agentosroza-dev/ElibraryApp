@@ -11,6 +11,8 @@ class ApiConfig {
   static const String items = '/items';
   static const String categories = '/categories';
   static const String searchBooks = '/search/books';
+  static const String searchTrending = '/search/trending';
+  static const String searchSuggested = '/search/suggested';
   static const String pdfProgress = '/pdf-progress';
   static const String pdfProgressList = '/pdf-progress/pdf-progress-list';
   static const String pdfCommentHighlights = '/pdf-comment-highlights';

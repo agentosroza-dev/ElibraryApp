@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -15,7 +16,7 @@ class AboutScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           loc.translate('about'),
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: context.sp(17), fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -28,7 +29,7 @@ class AboutScreen extends StatelessWidget {
             Text(
               loc.translate('app_name'),
               style: TextStyle(
-                fontSize: 24,
+                fontSize: context.sp(24),
                 fontWeight: FontWeight.w700,
                 color: cs.onSurface,
               ),
@@ -36,7 +37,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               '${loc.translate('version')} 1.0.0',
-              style: TextStyle(fontSize: 14, color: AppColors.iosGray),
+              style: TextStyle(fontSize: context.sp(14), color: AppColors.iosGray),
             ),
             const SizedBox(height: 32),
             _buildInfoCard(context, cs, isDark, loc),
@@ -81,17 +82,17 @@ class AboutScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildInfoRow(Icons.person, 'Developer', 'PAC Team', cs),
+          _buildInfoRow(context, Icons.person, 'Developer', 'PAC Team', cs),
           Divider(height: 0, indent: 52, color: isDark ? AppColors.iosSeparatorDark.withValues(alpha: 0.3) : AppColors.iosSeparatorLight.withValues(alpha: 0.08)),
-          _buildInfoRow(Icons.email_outlined, 'Email', 'support@pac.edu.kh', cs),
+          _buildInfoRow(context, Icons.email_outlined, 'Email', 'support@pac.edu.kh', cs),
           Divider(height: 0, indent: 52, color: isDark ? AppColors.iosSeparatorDark.withValues(alpha: 0.3) : AppColors.iosSeparatorLight.withValues(alpha: 0.08)),
-          _buildInfoRow(Icons.language, 'Website', 'www.pac.edu.kh', cs),
+          _buildInfoRow(context, Icons.language, 'Website', 'www.pac.edu.kh', cs),
         ],
       ),
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value, ColorScheme cs) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String label, String value, ColorScheme cs) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
@@ -112,12 +113,12 @@ class AboutScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 12, color: AppColors.iosGray),
+                  style: TextStyle(fontSize: context.sp(12), color: AppColors.iosGray),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: cs.onSurface),
+                  style: TextStyle(fontSize: context.sp(15), fontWeight: FontWeight.w500, color: cs.onSurface),
                 ),
               ],
             ),
@@ -145,18 +146,17 @@ class AboutScreen extends StatelessWidget {
               Text(
                 loc.translate('about'),
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: context.sp(16),
                   fontWeight: FontWeight.w600,
                   color: cs.onSurface,
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'PAC E-Library is a digital reading platform that provides students and faculty with access to a vast collection of academic resources, e-books, and research materials anytime, anywhere.',
-            style: TextStyle(
-              fontSize: 14,
+            ]),
+            const SizedBox(height: 12),
+            Text(
+              'PAC E-Library is a digital reading platform that provides students and faculty with access to a vast collection of academic resources, e-books, and research materials anytime, anywhere.',
+              style: TextStyle(
+                fontSize: context.sp(14),
               color: AppColors.iosGray,
               height: 1.5,
             ),

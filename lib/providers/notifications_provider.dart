@@ -64,6 +64,11 @@ class NotificationsProvider extends ChangeNotifier {
       }
       _knownIds.addAll(items.map((e) => e.id));
       _firstCheckDone = true;
+
+      if (response.containsKey('unread_count')) {
+        _unreadCount = '${response["unread_count"]}';
+        notifyListeners();
+      }
     } catch (e) {
       debugPrint('Notification check error: $e');
     }

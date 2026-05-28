@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../config/theme.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_localizations.dart';
+import '../utils/font_scale.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -236,7 +237,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         title: Text(
           loc.translate('edit_profile'),
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: context.sp(17), fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -397,14 +398,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             const SizedBox(height: 8),
             Text(
               loc.translate('tap_change_photo'),
-              style: TextStyle(color: AppColors.iosGray, fontSize: 13),
+              style: TextStyle(color: AppColors.iosGray, fontSize: context.sp(13)),
             ),
             if (_photoUploaded)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
                   loc.translate('photo_updated_label'),
-                  style: TextStyle(color: AppColors.iosGreen, fontSize: 12),
+                  style: TextStyle(color: AppColors.iosGreen, fontSize: context.sp(12)),
                 ),
               ),
             if (auth.isLoading && _photoBase64 != null)
@@ -424,7 +425,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 12,
+          fontSize: context.sp(12),
           fontWeight: FontWeight.w600,
           color: AppColors.iosGray,
           letterSpacing: 0.5,
@@ -483,7 +484,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: TextField(
               controller: controller,
               style: TextStyle(
-                fontSize: 15,
+                fontSize: context.sp(15),
                 fontWeight: FontWeight.w500,
                 color: cs.onSurface,
               ),
@@ -509,15 +510,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 loc.translate('save'),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 13,
+                  fontSize: context.sp(13),
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
           ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
   }
 
   Widget _buildPasswordField(
@@ -554,7 +555,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               obscureText: obscure,
               validator: validator,
               style: TextStyle(
-                fontSize: 15,
+                fontSize: context.sp(15),
                 fontWeight: FontWeight.w500,
                 color: cs.onSurface,
               ),
