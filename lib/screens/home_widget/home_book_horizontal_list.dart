@@ -47,7 +47,7 @@ class HomeBookHorizontalList extends StatelessWidget {
               ),
             ),
             child: SizedBox(
-              width: 130,
+              width: 150,
               child: Card(
                 elevation: 2,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
