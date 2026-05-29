@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 import '../config/theme.dart';
 
 class ReadBookScreen extends StatefulWidget {
   final String url;
   final String? title;
 
-  const ReadBookScreen({
-    super.key,
-    required this.url,
-    this.title,
-  });
+  const ReadBookScreen({super.key, required this.url, this.title});
 
   @override
   State<ReadBookScreen> createState() => _ReadBookScreenState();
@@ -47,7 +44,15 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
         ),
       );
 
+    _initAndroidSettings();
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadUrl());
+  }
+
+  void _initAndroidSettings() {
+    final controller = _controller.platform;
+    if (controller is AndroidWebViewController) {
+      controller.setMixedContentMode(MixedContentMode.compatibilityMode);
+    }
   }
 
   Future<void> _loadUrl() async {
@@ -94,7 +99,9 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
           WebViewWidget(controller: _controller),
           if (_isLoading)
             Container(
-              color: isDark ? AppColors.iosBackgroundDark : AppColors.iosCardLight,
+              color: isDark
+                  ? AppColors.iosBackgroundDark
+                  : AppColors.iosCardLight,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -103,10 +110,7 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
                     const SizedBox(height: 16),
                     Text(
                       'Loading...',
-                      style: TextStyle(
-                        color: AppColors.iosGray,
-                        fontSize: 15,
-                      ),
+                      style: TextStyle(color: AppColors.iosGray, fontSize: 15),
                     ),
                   ],
                 ),
@@ -135,16 +139,24 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
                     const SizedBox(height: 16),
                     const Text(
                       'Failed to load page',
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Check your connection and try again',
+                      style: TextStyle(fontSize: 14, color: AppColors.iosGray),
+                    ),
+                    const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
                           _hasError = false;
                           _isLoading = true;
                         });
-                        _loadUrl();
+                        _controller.reload();
                       },
                       child: const Text('Retry'),
                     ),

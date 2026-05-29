@@ -110,7 +110,7 @@ class HomeContinueReading extends StatelessWidget {
                                 bottomRight: Radius.circular(10),
                               ),
                               child: LinearProgressIndicator(
-                                value: double.parse(book.percent) / 100,
+                                value: (double.tryParse(book.percent) ?? 0) / 100,
                                 backgroundColor: Colors.white.withValues(alpha: 0.25),
                                 color: cs.primary,
                                 minHeight: 4,
@@ -133,7 +133,7 @@ class HomeContinueReading extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${double.parse(book.percent).toStringAsFixed(0)}${loc.translate('percent_complete')}',
+                      '${(double.tryParse(book.percent) ?? 0).toStringAsFixed(0)}${loc.translate('percent_complete')}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import 'config/theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/home_provider.dart';
+import 'providers/items_provider.dart';
 import 'providers/notifications_provider.dart';
 import 'providers/pdf_progress_provider.dart';
+import 'providers/recommended_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/user_favorites_provider.dart';
 import 'screens/flash_screen.dart';
@@ -30,9 +32,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => ItemsProvider()),
         ChangeNotifierProvider(create: (_) => UserFavoritesProvider()),
         ChangeNotifierProvider(create: (_) => PdfProgressProvider()),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
+        ChangeNotifierProvider(create: (_) => RecommendedProvider()),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {

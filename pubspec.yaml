@@ -33,6 +33,7 @@ dependencies:
   flutter_local_notifications: ^21.0.0
   liquid_bottom_nav_bar: ^0.1.0
   delightful_toast: ^1.1.0
+  webview_flutter_android: ^4.12.0
 
 dev_dependencies:
   flutter_test:

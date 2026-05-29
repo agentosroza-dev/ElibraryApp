@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../config/base_url.dart';
@@ -9,6 +8,7 @@ import '../models/categories_model.dart';
 import '../providers/category_books_provider.dart';
 import '../utils/app_localizations.dart';
 import '../utils/font_scale.dart';
+import 'category_books_loading_state.dart';
 import 'items_details_screen.dart';
 
 String _coverUrl(String? url) {
@@ -69,7 +69,19 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
       ),
       body: ListenableBuilder(
         listenable: _provider,
-        builder: (context, _) => _buildBody(cs, isDark),
+        builder: (context, _) => Column(
+          children: [
+            if (_provider.isFetchingMore && !_provider.loading)
+              LinearProgressIndicator(
+                backgroundColor: cs.primary.withValues(alpha: 0.12),
+                color: cs.primary,
+                minHeight: 3,
+              ),
+            Expanded(
+              child: _buildBody(cs, isDark),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -77,9 +89,7 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
   Widget _buildBody(ColorScheme cs, bool isDark) {
     final loc = AppLocalizations.of(context);
     if (_provider.loading) {
-      return const Center(
-        child: SpinKitFadingCircle(color: AppColors.iosBlue, size: 36),
-      );
+      return const CategoryBooksLoadingState();
     }
     if (_provider.error != null) {
       return Center(
@@ -206,14 +216,6 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  if (index >= books.length) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: SpinKitFadingCircle(color: AppColors.iosBlue, size: 24),
-                      ),
-                    );
-                  }
                   final book = books[index];
                   return GestureDetector(
                     onTap: () => Navigator.push(
@@ -284,7 +286,7 @@ class _CategoryBooksScreenState extends State<CategoryBooksScreen> {
                     ),
                   );
                 },
-                childCount: books.length + (_provider.isFetchingMore ? 1 : 0),
+                childCount: books.length,
               ),
             ),
           ),

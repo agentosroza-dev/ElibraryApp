@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../services/api_client.dart';
 import '../config/api_config.dart';
 import '../models/categories_model.dart';
+import '../models/items_model.dart';
 import '../models/overall_recommended_books.dart';
 
 class BookItem {
@@ -58,9 +59,9 @@ class ContinueReadingItem {
       title: '${json['title']}',
       authorName: '${json['author_name']}',
       coverUrl: '${json['cover_url']}',
-      lastPage: '${json['last_page']}',
-      totalPages: '${json['total_pages']}',
-      percent: '${json['percent']}',
+      lastPage: json['last_page'] != null ? '${json['last_page']}' : '0',
+      totalPages: json['total_pages'] != null ? '${json['total_pages']}' : '0',
+      percent: json['percent'] != null ? '${json['percent']}' : '0',
     );
   }
 }
@@ -70,6 +71,7 @@ class HomeProvider extends ChangeNotifier {
 
   List<RecommendedBook> _overallRecommended = [];
   List<BookItem> _popular = [];
+  List<BookItem> _newBooks = [];
   List<ContinueReadingItem> _continueReading = [];
   List<Categories> _categories = [];
   bool _isLoading = false;
@@ -77,6 +79,7 @@ class HomeProvider extends ChangeNotifier {
 
   List<RecommendedBook> get overallRecommended => _overallRecommended;
   List<BookItem> get popular => _popular;
+  List<BookItem> get newBooks => _newBooks;
   List<ContinueReadingItem> get continueReading => _continueReading;
   List<Categories> get categories => _categories;
   bool get isLoading => _isLoading;
@@ -89,32 +92,25 @@ class HomeProvider extends ChangeNotifier {
 
     _overallRecommended = [];
     _popular = [];
+    _newBooks = [];
     _continueReading = [];
     _categories = [];
 
     final results = await Future.wait([
-      _safeGet(ApiConfig.recommendedOverall).then(_parseOverallRecommended).catchError((_) => <RecommendedBook>[]),
-      _safeGet(ApiConfig.homePopular).then(_parseBooks).catchError((_) => <BookItem>[]),
-      _safeGet(ApiConfig.homeContinueReading).then(_parseContinueReading).catchError((_) => <ContinueReadingItem>[]),
-      _safeGet(ApiConfig.categories).then(_parseCategories).catchError((_) => <Categories>[]),
+      _fetchSection(ApiConfig.recommendedOverall, (res) => _overallRecommended = _parseOverallRecommended(res)),
+      _fetchSection(ApiConfig.homePopular, (res) => _popular = _parseBooks(res)),
+      _fetchNewBooks(),
+      _fetchSection(ApiConfig.homeContinueReading, (res) => _continueReading = _parseContinueReading(res)),
+      _fetchSection(ApiConfig.categories, (res) => _categories = _parseCategories(res)),
     ]);
 
-    _overallRecommended = results[0] as List<RecommendedBook>;
-    _popular = results[1] as List<BookItem>;
-    _continueReading = results[2] as List<ContinueReadingItem>;
-    _categories = results[3] as List<Categories>;
+    final errors = results.whereType<String>().toList();
+    if (errors.isNotEmpty) {
+      _error = errors.join('\n');
+    }
 
     _isLoading = false;
     notifyListeners();
-  }
-
-  Future<Map<String, dynamic>> _safeGet(String endpoint) async {
-    try {
-      return await _client.get(endpoint, authenticate: true);
-    } catch (e) {
-      _error = e.toString();
-      rethrow;
-    }
   }
 
   List<RecommendedBook> _parseOverallRecommended(Map<String, dynamic> response) {
@@ -125,33 +121,65 @@ class HomeProvider extends ChangeNotifier {
     }
   }
 
+  List<dynamic> _extractData(Map<String, dynamic> response) {
+    final raw = response['data'];
+    if (raw is List) return raw;
+    if (raw is Map && raw['data'] is List) return raw['data'] as List;
+    return [];
+  }
+
   List<BookItem> _parseBooks(Map<String, dynamic> response) {
-    final data = response['data'];
-    if (data is List) {
-      return data.map((e) => BookItem.fromJson(e as Map<String, dynamic>)).toList();
-    }
+    try {
+      return _extractData(response)
+          .map((e) => BookItem.fromJson(e is Map ? Map<String, dynamic>.from(e) : e as Map<String, dynamic>))
+          .toList();
+    } catch (_) {}
     return [];
   }
 
   List<Categories> _parseCategories(Map<String, dynamic> response) {
     try {
-      final data = response['data'];
-      if (data is List) {
-        return data.map((e) => Categories.fromJson(e as Map<String, dynamic>)).toList();
-      }
-      return [];
-    } catch (_) {
-      return [];
-    }
+      return _extractData(response)
+          .map((e) => Categories.fromJson(e is Map ? Map<String, dynamic>.from(e) : e as Map<String, dynamic>))
+          .toList();
+    } catch (_) {}
+    return [];
   }
 
   List<ContinueReadingItem> _parseContinueReading(Map<String, dynamic> response) {
-    final data = response['data'];
-    if (data is List) {
-      return data
-          .map((e) => ContinueReadingItem.fromJson(e as Map<String, dynamic>))
+    try {
+      return _extractData(response)
+          .map((e) => ContinueReadingItem.fromJson(e is Map ? Map<String, dynamic>.from(e) : e as Map<String, dynamic>))
           .toList();
-    }
+    } catch (_) {}
     return [];
+  }
+
+  Future<String?> _fetchSection(String endpoint, void Function(Map<String, dynamic>) onSuccess) async {
+    try {
+      final res = await _client.get(endpoint, authenticate: true);
+      onSuccess(res);
+      return null;
+    } catch (e) {
+      return '$endpoint: $e';
+    }
+  }
+
+  Future<String?> _fetchNewBooks() async {
+    try {
+      final res = await _client.get(ApiConfig.items, authenticate: true);
+      final items = Items.fromJson(res);
+      items.data.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      _newBooks = items.data.take(4).map((e) => BookItem(
+        id: e.id,
+        title: e.title,
+        authorName: e.authorName,
+        coverUrl: e.coverUrl ?? '',
+        categoryName: e.categoryName,
+      )).toList();
+      return null;
+    } catch (e) {
+      return '${ApiConfig.items}: $e';
+    }
   }
 }

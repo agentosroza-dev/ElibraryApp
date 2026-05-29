@@ -27,6 +27,7 @@ class ApiConfig {
   // Home page
   static const String homeRecommended = '/home/recommended';
   static const String homePopular = '/home/popular';
+  static const String homeNewBooks = '/home/new-books';
   static const String homeContinueReading = '/home/continue-reading';
 
   // Recommended overall books (from UserController)

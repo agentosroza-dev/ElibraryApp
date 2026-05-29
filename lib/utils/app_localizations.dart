@@ -74,6 +74,7 @@ class AppLocalizations {
       'continue_reading': 'Continue Reading',
       'percent_complete': '% complete',
       'popular_books': 'Popular Books',
+      'new_books': 'New Books',
 
       'profile_section': 'PROFILE',
       'name': 'Name',
@@ -194,6 +195,7 @@ class AppLocalizations {
       'continue_reading': 'បន្តការអាន',
       'percent_complete': '% បានអាន',
       'popular_books': 'សៀវភៅពេញនិយម',
+      'new_books': 'សៀវភៅថ្មីៗ',
 
       'profile_section': 'ប្រវត្តិរូប',
       'name': 'ឈ្មោះ',
