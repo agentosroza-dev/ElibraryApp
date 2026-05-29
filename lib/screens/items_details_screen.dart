@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:delightful_toast/delight_toast.dart';
+import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../config/api_config.dart';
 import '../config/base_url.dart';
 import '../config/theme.dart';
+import '../main.dart' show navigatorKey;
 import '../models/items_model.dart';
 import '../providers/user_favorites_provider.dart';
 import '../services/api_client.dart';
@@ -136,59 +139,52 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
         setState(() => _isFavorite = newState);
         context.read<UserFavoritesProvider>().fetchFavorites(refresh: true);
         final bookName = _item!.title;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(
-                  newState ? Icons.favorite : Icons.favorite_border,
-                  color: newState ? AppColors.iosRed : Colors.white70,
-                  size: 22,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        bookName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        newState ? 'Added to favorites' : 'Removed from favorites',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.7),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+        final toastCtx = navigatorKey.currentContext!;
+        DelightToastBar(
+          autoDismiss: true,
+          builder: (_) => ToastCard(
+            leading: Icon(
+              newState ? Icons.favorite : Icons.favorite_border,
+              color: newState ? AppColors.iosRed : AppColors.iosGray,
+              size: 28,
             ),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            duration: const Duration(seconds: 2),
-            action: newState
-                ? SnackBarAction(
-                    label: 'Go',
+            title: Text(
+              bookName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+            subtitle: Text(
+              newState ? 'Added to favorites' : 'Removed from favorites',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(toastCtx).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            trailing: newState
+                ? TextButton(
                     onPressed: () {
+                      DelightToastBar.removeAll();
                       Navigator.push(
-                        context,
+                        toastCtx,
                         MaterialPageRoute(
                           builder: (_) => const UserBookFavoritesScreen(),
                         ),
                       );
                     },
+                    child: const Text(
+                      'Go',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                   )
                 : null,
           ),
-        );
+        ).show(toastCtx);
       }
     } catch (_) {
       if (mounted) {
