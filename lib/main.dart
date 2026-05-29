@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'config/theme.dart';
 import 'providers/auth_provider.dart';
+import 'providers/history_search_provider.dart';
 import 'providers/home_provider.dart';
 import 'providers/items_provider.dart';
 import 'providers/notifications_provider.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PdfProgressProvider()),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
         ChangeNotifierProvider(create: (_) => RecommendedProvider()),
+        ChangeNotifierProvider(
+          create: (_) => HistorySearchProvider()..load(),
+        ),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {

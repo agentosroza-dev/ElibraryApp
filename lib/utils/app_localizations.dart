@@ -126,6 +126,8 @@ class AppLocalizations {
       'failed_load_books': 'Failed to load books',
       'no_books_category': 'No books in this category',
 
+      'recent': 'Recent',
+      'clear_all': 'Clear All',
       'user': 'User',
       'books': 'Books',
       'tags': 'Tags',
@@ -247,6 +249,8 @@ class AppLocalizations {
       'failed_load_books': 'បរាជ័យក្នុងការទាញយកសៀវភៅ',
       'no_books_category': 'គ្មានសៀវភៅក្នុងប្រភេទនេះទេ',
 
+      'recent': 'ថ្មីៗ',
+      'clear_all': 'លុបទាំងអស់',
       'user': 'អ្នកប្រើប្រាស់',
       'books': 'សៀវភៅ',
       'tags': 'ស្លាក',

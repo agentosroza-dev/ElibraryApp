@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../config/base_url.dart';
 import '../config/theme.dart';
 import '../logics/search_logic.dart';
 import '../models/trending_search.dart' as trending;
 import '../models/suggested_search.dart' as suggested;
+import '../providers/history_search_provider.dart';
 import '../utils/app_localizations.dart';
 import '../utils/font_scale.dart';
 import 'items_details_screen.dart';
@@ -31,14 +33,21 @@ class _SearchScreenState extends State<SearchScreen> {
   final _focusNode = FocusNode();
   final SearchLogic _logic = SearchLogic();
   bool _isLoading = true;
+  bool _isFocused = false;
   String? _error;
   List<trending.Datum> _trending = [];
   List<suggested.Datum> _suggested = [];
   List<suggested.Datum> _filteredSuggestions = [];
 
+  bool get _showHistory => _isFocused && _controller.text.isEmpty;
+
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(() {
+      if (!mounted) return;
+      setState(() => _isFocused = _focusNode.hasFocus);
+    });
     _fetchInitialData();
   }
 
@@ -75,7 +84,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _clearSearch() {
     _controller.clear();
-    _focusNode.unfocus();
     setState(() {
       _error = null;
       _filteredSuggestions = [];
@@ -88,9 +96,13 @@ class _SearchScreenState extends State<SearchScreen> {
       TextPosition(offset: tagName.length),
     );
     _updateSearch(tagName);
+    context.read<HistorySearchProvider>().add(tagName);
   }
 
   Future<void> _openSuggestion(suggested.Datum item) async {
+    if (_controller.text.trim().isNotEmpty) {
+      context.read<HistorySearchProvider>().add(_controller.text.trim());
+    }
     try {
       final itemData = await _logic.fetchItemDetail(item.id);
       if (!mounted) return;
@@ -121,6 +133,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       children: [
         _buildSearchBar(cs, isDark),
+        if (_showHistory) _buildHistoryList(cs, isDark),
         Expanded(child: _buildBody(cs, isDark)),
       ],
     );
@@ -194,6 +207,103 @@ class _SearchScreenState extends State<SearchScreen> {
         onChanged: (v) {
           _updateSearch(v);
         },
+      ),
+    );
+  }
+
+  Widget _buildHistoryList(ColorScheme cs, bool isDark) {
+    final history = context.watch<HistorySearchProvider>();
+    if (history.queries.isEmpty) return const SizedBox.shrink();
+    final loc = AppLocalizations.of(context);
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 280),
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.iosCardDark : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 4),
+            child: Row(
+              children: [
+                Text(
+                  loc.translate('recent'),
+                  style: TextStyle(
+                    fontSize: context.sp(12),
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.iosGray,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () => history.clear(),
+                  child: Text(
+                    loc.translate('clear_all'),
+                    style: TextStyle(
+                      fontSize: context.sp(12),
+                      color: cs.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              itemCount: history.queries.length,
+              itemBuilder: (context, index) {
+                final query = history.queries[index];
+                return InkWell(
+                  onTap: () {
+                    _controller.text = query;
+                    _controller.selection = TextSelection.fromPosition(
+                      TextPosition(offset: query.length),
+                    );
+                    context.read<HistorySearchProvider>().add(query);
+                    _updateSearch(query);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    child: Row(
+                      children: [
+                        Icon(Icons.history, size: 18, color: AppColors.iosGray),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            query,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: context.sp(14),
+                              color: cs.onSurface,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => history.remove(query),
+                          child: Icon(Icons.close, size: 16, color: AppColors.iosGray3),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
