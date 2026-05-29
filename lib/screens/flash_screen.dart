@@ -73,7 +73,7 @@ class _FlashScreenState extends State<FlashScreen> {
               child: Text(
                 loc.translate('app_name'),
                 style: TextStyle(
-                  fontSize: context.sp(34),
+                  fontSize: context.sp(24),
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                   letterSpacing: 0.5,
@@ -87,7 +87,7 @@ class _FlashScreenState extends State<FlashScreen> {
               child: Text(
                 loc.translate('discover_knowledge'),
                 style: TextStyle(
-                  fontSize: context.sp(17),
+                  fontSize: context.sp(16),
                   color: Colors.white.withValues(alpha: 0.75),
                 ),
               ),

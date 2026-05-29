@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -83,18 +84,18 @@ class HomeBanner extends StatelessWidget {
                       Expanded(
                         flex: 3,
                         child: Padding(
-                          padding: const EdgeInsets.all(24),
+                          padding: const EdgeInsets.all(12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 book.title,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: context.sp(16),
-                                fontWeight: FontWeight.w700,
-                              ),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: context.sp(16),
+                                  fontWeight: FontWeight.w700,
+                                ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -115,12 +116,18 @@ class HomeBanner extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => ReadBookScreen(url: url, title: book.title),
+                                      builder: (_) => ReadBookScreen(
+                                        url: url,
+                                        title: book.title,
+                                      ),
                                     ),
                                   );
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 9),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 22,
+                                    vertical: 10,
+                                  ),
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
@@ -130,14 +137,17 @@ class HomeBanner extends StatelessWidget {
                                     ),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
-                                  child: Text(
-                                     overflow: TextOverflow.ellipsis,
+                                  child: AutoSizeText(
                                     loc.translate('read_now'),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: context.sp(11),
                                       fontWeight: FontWeight.w700,
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    minFontSize:
+                                        8, // Minimum font size before overflowing
                                   ),
                                 ),
                               ),
@@ -152,21 +162,31 @@ class HomeBanner extends StatelessWidget {
                             topRight: Radius.circular(14),
                             bottomRight: Radius.circular(14),
                           ),
-                          child: book.coverUrl.isNotEmpty && book.coverUrl != 'null'
+                          child:
+                              book.coverUrl.isNotEmpty &&
+                                  book.coverUrl != 'null'
                               ? CachedNetworkImage(
                                   imageUrl: _coverUrl(book.coverUrl),
                                   width: double.infinity,
                                   height: double.infinity,
                                   fit: BoxFit.cover,
-                                  placeholder: (_, _) => Container(color: Colors.white.withValues(alpha: 0.08)),
+                                  placeholder: (_, _) => Container(
+                                    color: Colors.white.withValues(alpha: 0.08),
+                                  ),
                                   errorWidget: (_, _, _) => Container(
                                     color: Colors.white.withValues(alpha: 0.08),
-                                    child: const Icon(Icons.book, color: Colors.white38),
+                                    child: const Icon(
+                                      Icons.book,
+                                      color: Colors.white38,
+                                    ),
                                   ),
                                 )
                               : Container(
                                   color: Colors.white.withValues(alpha: 0.08),
-                                  child: const Icon(Icons.book, color: Colors.white38),
+                                  child: const Icon(
+                                    Icons.book,
+                                    color: Colors.white38,
+                                  ),
                                 ),
                         ),
                       ),

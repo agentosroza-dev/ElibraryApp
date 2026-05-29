@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Text(
                                     loc.translate('welcome_back'),
                                     style: TextStyle(
-                                      fontSize: context.sp(24),
+                                      fontSize: context.sp(22),
                                       fontWeight: FontWeight.w700,
                                       color: Colors.white,
                                     ),
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.white.withValues(
                                         alpha: 0.65,
                                       ),
-                                      fontSize: context.sp(15),
+                                      fontSize: context.sp(14),
                                     ),
                                   ),
                                   const SizedBox(height: 28),
@@ -230,11 +230,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   color: Colors.white,
                                                   size: 24,
                                                 )
-                                                  : Text(
-                                                      loc.translate('sign_in'),
-                                                      style: TextStyle(
-                                                        fontSize: context.sp(17),
-                                                        fontWeight: FontWeight.w600,
+                                              : Text(
+                                                  loc.translate('sign_in'),
+                                                  style: TextStyle(
+                                                    fontSize: context.sp(17),
+                                                    fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
                                         ),
@@ -284,86 +284,86 @@ class _LoginScreenState extends State<LoginScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                           GestureDetector(
-                                             onTap: () => settings.setLocale(
-                                               AppLocalePreference.english,
-                                             ),
-                                             child: Container(
-                                               padding:
-                                                   const EdgeInsets.symmetric(
-                                                     horizontal: 20,
-                                                     vertical: 10,
-                                                   ),
-                                               decoration: BoxDecoration(
-                                                 color: isEn
-                                                     ? Colors.white.withValues(
-                                                         alpha: 0.15,
-                                                       )
-                                                     : Colors.transparent,
-                                                 borderRadius:
-                                                     BorderRadius.circular(10),
-                                                 border: Border.all(
-                                                   color: Colors.white
-                                                       .withValues(alpha: 0.2),
-                                                 ),
-                                               ),
-                                               child: Text(
-                                                 loc.translate('english'),
-                                                 style: TextStyle(
-                                                   color: isEn
-                                                       ? Colors.white
-                                                       : Colors.white.withValues(
-                                                           alpha: 0.55,
-                                                         ),
-                                                   fontWeight: isEn
-                                                       ? FontWeight.w700
-                                                       : FontWeight.w500,
-                                                   fontSize: context.sp(14),
-                                                 ),
-                                               ),
-                                             ),
-                                           ),
-                                           const SizedBox(width: 12),
-                                           GestureDetector(
-                                             onTap: () => settings.setLocale(
-                                               AppLocalePreference.khmer,
-                                             ),
-                                             child: Container(
-                                               padding:
-                                                   const EdgeInsets.symmetric(
-                                                     horizontal: 20,
-                                                     vertical: 10,
-                                                   ),
-                                               decoration: BoxDecoration(
-                                                 color: !isEn
-                                                     ? Colors.white.withValues(
-                                                         alpha: 0.15,
-                                                       )
-                                                     : Colors.transparent,
-                                                 borderRadius:
-                                                     BorderRadius.circular(10),
-                                                 border: Border.all(
-                                                   color: Colors.white
-                                                       .withValues(alpha: 0.2),
-                                                 ),
-                                               ),
-                                               child: Text(
-                                                 loc.translate('khmer'),
-                                                 style: TextStyle(
-                                                   color: !isEn
-                                                       ? Colors.white
-                                                       : Colors.white.withValues(
-                                                           alpha: 0.55,
-                                                         ),
-                                                   fontWeight: !isEn
-                                                       ? FontWeight.w700
-                                                       : FontWeight.w500,
-                                                   fontSize: context.sp(14),
-                                                 ),
-                                               ),
-                                             ),
-                                           ),
-                                         ],
+                                          GestureDetector(
+                                            onTap: () => settings.setLocale(
+                                              AppLocalePreference.english,
+                                            ),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 10,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: isEn
+                                                    ? Colors.white.withValues(
+                                                        alpha: 0.15,
+                                                      )
+                                                    : Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                border: Border.all(
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.2),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                loc.translate('english'),
+                                                style: TextStyle(
+                                                  color: isEn
+                                                      ? Colors.white
+                                                      : Colors.white.withValues(
+                                                          alpha: 0.55,
+                                                        ),
+                                                  fontWeight: isEn
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w500,
+                                                  fontSize: context.sp(14),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          GestureDetector(
+                                            onTap: () => settings.setLocale(
+                                              AppLocalePreference.khmer,
+                                            ),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 10,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: !isEn
+                                                    ? Colors.white.withValues(
+                                                        alpha: 0.15,
+                                                      )
+                                                    : Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                border: Border.all(
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.2),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                loc.translate('khmer'),
+                                                style: TextStyle(
+                                                  color: !isEn
+                                                      ? Colors.white
+                                                      : Colors.white.withValues(
+                                                          alpha: 0.55,
+                                                        ),
+                                                  fontWeight: !isEn
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w500,
+                                                  fontSize: context.sp(14),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       );
                                     },
                                   ),
@@ -372,22 +372,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                      loc.translate('no_account'),
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.55,
-                                        ),
-                                        fontSize: context.sp(14),
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        loc.translate('sign_up'),
+                                        loc.translate('no_account'),
                                         style: TextStyle(
-                                          color: AppColors.iosBlue,
-                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white.withValues(
+                                            alpha: 0.55,
+                                          ),
                                           fontSize: context.sp(14),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          loc.translate('sign_up'),
+                                          style: TextStyle(
+                                            color: AppColors.iosBlue,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: context.sp(14),
                                           ),
                                         ),
                                       ),
