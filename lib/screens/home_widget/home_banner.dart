@@ -92,7 +92,7 @@ class HomeBanner extends StatelessWidget {
                                 book.title,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: context.sp(20),
+                                fontSize: context.sp(16),
                                 fontWeight: FontWeight.w700,
                               ),
                                 maxLines: 2,
@@ -105,7 +105,7 @@ class HomeBanner extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.65),
-                                  fontSize: context.sp(13),
+                                  fontSize: context.sp(11),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -128,13 +128,14 @@ class HomeBanner extends StatelessWidget {
                                         AppColors.iosDarkBlue,
                                       ],
                                     ),
-                                    borderRadius: BorderRadius.circular(22),
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Text(
+                                     overflow: TextOverflow.ellipsis,
                                     loc.translate('read_now'),
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: context.sp(13),
+                                      fontSize: context.sp(11),
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),

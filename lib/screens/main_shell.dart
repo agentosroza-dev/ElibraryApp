@@ -35,6 +35,7 @@ class _MainShellState extends State<MainShell> {
 
   void _handleScrollNotification(ScrollNotification notification) {
     if (notification is UserScrollNotification) {
+      if (notification.metrics.axis != Axis.vertical) return;
       switch (notification.direction) {
         case ScrollDirection.forward:
           if (!_isNavBarVisible) {

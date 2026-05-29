@@ -13,6 +13,8 @@ import 'help_support_screen.dart';
 import 'login_screen.dart';
 import 'notifications_screen.dart';
 import 'settings_screen.dart';
+import '../providers/user_favorites_provider.dart';
+import '../providers/pdf_progress_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -21,6 +23,8 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cs = Theme.of(context).colorScheme;
+    final favProvider = context.watch<UserFavoritesProvider>();
+    final progressProvider = context.watch<PdfProgressProvider>();
 
     return Consumer<AuthProvider>(
       builder: (context, auth, _) {
@@ -28,9 +32,9 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               _buildProfileHeader(context, cs, isDark, auth),
-              _buildStatsRow(context, cs, isDark),
+              _buildStatsRow(context, cs, isDark , favProvider, progressProvider),
               _buildMenuSection(context, cs, isDark),
-              const SizedBox(height: 32),
+              const SizedBox(height: 128),
             ],
           ),
         );
@@ -132,17 +136,16 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsRow(BuildContext context, ColorScheme cs, bool isDark) {
+  Widget _buildStatsRow(BuildContext context, ColorScheme cs, bool isDark,
+      UserFavoritesProvider favProvider, PdfProgressProvider progressProvider) {
     final loc = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
         children: [
-          _buildStatCard(context, loc.translate('books'), '12', cs, isDark),
+          _buildStatCard(context, loc.translate('books'), progressProvider.progressList.length.toString(), cs, isDark),
           const SizedBox(width: 10),
-          _buildStatCard(context, loc.translate('favorites'), '8', cs, isDark),
-          const SizedBox(width: 10),
-          _buildStatCard(context, loc.translate('hours'), '47', cs, isDark),
+          _buildStatCard(context, loc.translate('favorites'), favProvider.favorites.length.toString(), cs, isDark),
         ],
       ),
     );
